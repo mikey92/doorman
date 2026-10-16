@@ -4,9 +4,20 @@
 
 Live: **https://doorman.mikey9220.workers.dev** · Evaluation: [eval/CLASSIFIER.md](eval/CLASSIFIER.md) · Data: [eval/DATA.md](eval/DATA.md)
 
-In seven weeks my three Shopify apps' contact form got 23 different messages. All 23 were people selling me something: installs, reviews, a promo post in their Discord. Not one was a customer. The day one is, I don't want it buried under the next "I came across your app and was really impressed".
+In six weeks my three Shopify apps' contact form, and the email behind it, got 23 different messages from 21 senders. All 23 were people selling me something: installs, reviews, a promo post in their Discord. Not one was a customer. The day one is, I don't want it buried under the next "I came across your app and was really impressed".
 
-Load messages (paste one, drop `.eml` files, or a Gmail Takeout `.mbox`) and press **Sort Inbox**. **EmbeddingGemma 300M**, running in a Web Worker on your GPU, turns each message and each of its sentences into 768 numbers; a logistic regression trained on 245 hand-labelled posts says how likely each is to be a pitch. Customers stay on top. Close calls stay on top too, marked "not sure". Pitches fold away, each with the sentence that gave it away highlighted. Nothing is deleted or answered.
+![Sorting the example inbox: customers stay on top, pitches fold away with the giveaway sentence highlighted](media/demo.gif)
+
+Load messages (paste one, drop `.eml` files, or a Gmail Takeout `.mbox`) and press **Sort Inbox**. **EmbeddingGemma 300M**, running in a Web Worker on your GPU, turns each message and each of its sentences into 768 numbers; a logistic regression trained on 245 hand-labelled forum posts and my inbox's pitches says how likely each is to be a pitch. Customers stay on top. Close calls stay on top too, marked "not sure". Pitches fold away, each with the sentence that gave it away highlighted. Nothing is deleted or answered.
+
+## How well it works
+
+| | Customers hidden | Pitches folded away |
+|---|---|---|
+| Public forum posts, 5-fold cross-validation by topic (P ≥ 0.8) | 2 of 115 | 102 of 130 |
+| My inbox, each sender scored by a model that never saw them (P ≥ 0.8) | — | 23 of 23 |
+
+Between 0.5 and 0.8 a message stays on top as "not sure". Full tables, and every forum post on the wrong side: [eval/CLASSIFIER.md](eval/CLASSIFIER.md).
 
 ## Run it
 
