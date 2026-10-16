@@ -77,4 +77,3 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; }
 .card-head .p { margin-left: auto; font-size: 12px; font-variant-numeric: tabular-nums; }
 .preview { margin: 6px 0 0; font-size: 15px; }
 .q-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-details#pitch-group > summary { list-style-position: outside; margin-left: 18px; }
