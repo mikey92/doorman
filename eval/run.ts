@@ -51,7 +51,7 @@ async function run(key: ModelKey, tag: string) {
     const t = await triage(score, m.body);
     out[m.id] = { ...t, label: m.label, source: m.source, ms: Date.now() - t0 };
     const right = t.verdict === "unsure" ? "?" : (t.verdict === "pitch") === (m.label === "pitch") ? "ok" : "WRONG";
-    console.log(`${i + 1}/${messages.length} ${right} ${m.id} [${m.label} -> ${t.verdict} ${t.p.toFixed(3)}] ${t.quote || t.rated[0]?.sentence || ""}`);
+    console.log(`${i + 1}/${messages.length} ${right} ${m.id} [${m.label} -> ${t.verdict} ${t.score.toFixed(2)}] ${t.quote || t.rated[0]?.sentence || ""}`);
     writeFileSync(file, JSON.stringify(out, null, 1));
   }
   await generator.dispose();
@@ -71,13 +71,13 @@ export function score(r: Run, pitchAt = PITCH_AT, customerBelow = CUSTOMER_BELOW
   const all = Object.values(r).filter((x) => !source || x.source === source);
   const c = all.filter((x) => x.label === "customer");
   const p = all.filter((x) => x.label === "pitch");
-  const unsure = (x: { p: number }) => x.p >= customerBelow && x.p < pitchAt;
+  const unsure = (x: { score: number }) => x.score >= customerBelow && x.score < pitchAt;
   return {
     customers: c.length,
     pitches: p.length,
-    customersHidden: c.filter((x) => x.p >= pitchAt).length,
+    customersHidden: c.filter((x) => x.score >= pitchAt).length,
     customersUnsure: c.filter(unsure).length,
-    pitchesCaught: p.filter((x) => x.p >= pitchAt).length,
+    pitchesCaught: p.filter((x) => x.score >= pitchAt).length,
     pitchesUnsure: p.filter(unsure).length,
   };
 }
@@ -94,7 +94,7 @@ function report() {
     "",
     "Every run rates every message in `eval/messages.jsonl` with the same `triage()` the page uses. Scores are read from the model's next-token logits, so a run is reproducible. See `eval/DATA.md` for where the messages come from and how they were labelled.",
     "",
-    `## At the page's settings (pitch at P ≥ ${PITCH_AT}, customer below ${CUSTOMER_BELOW})`,
+    `## At the page's settings (pitch at log-odds ≥ ${PITCH_AT}, customer below ${CUSTOMER_BELOW})`,
     "",
     ...HEAD,
     ...runs.map(([n, r]) => row(n, score(r))),
@@ -111,9 +111,9 @@ function report() {
     ...runs.flatMap(([n, r]) => [
       `### ${n}`,
       "",
-      "| Pitch at P ≥ | Customers hidden | Pitches folded away |",
+      "| Pitch at log-odds ≥ | Customers hidden | Pitches folded away |",
       "|---|---|---|",
-      ...[0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99].map((t) => {
+      ...[0, 2, 4, 6, 8, 9, 10, 12].map((t) => {
         const s = score(r, t, Math.min(t, CUSTOMER_BELOW));
         return `| ${t} | ${s.customersHidden} of ${s.customers} | ${s.pitchesCaught} of ${s.pitches} |`;
       }),

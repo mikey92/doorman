@@ -1,13 +1,13 @@
 // The part Gemma plays: for each sentence of a contact-form message, how likely is it that the
 // sender is offering the business their own product or service? Gemma answers Yes or No, and we
-// read the probability it gives "Yes" straight from its output, which only an open model lets
+// read how strongly it leans to "Yes" straight from its output, which only an open model lets
 // you do. The sentence it rates highest is quoted on the card, so every verdict comes with the
 // sender's own words. This file knows nothing about where the model runs: the browser worker and
 // the Node eval both hand it a `score` function, so the eval measures exactly what the page does.
 
 export interface ChatMessage { role: "user" | "assistant"; content: string }
 
-/** P("Yes") against P("No") for the model's next token after these messages. */
+/** log P("Yes") − log P("No") for the model's next token after these messages. */
 export type Score = (messages: ChatMessage[]) => Promise<number>;
 
 export const MODELS = {
@@ -24,21 +24,21 @@ export type ModelKey = keyof typeof MODELS;
  */
 export type Verdict = "customer" | "pitch" | "unsure";
 
-export interface Rated { sentence: string; p: number }
+export interface Rated { sentence: string; /** Log-odds that this sentence offers something. */ score: number }
 
 export interface Triage {
   verdict: Verdict;
   /** The sentence most likely to be an offer, quoted on the card. */
   quote: string;
-  /** Highest P(offer) over the message's sentences. */
-  p: number;
+  /** Highest log-odds of an offer over the message's sentences. */
+  score: number;
   rated: Rated[];
 }
 
-/** At or above this, a message is folded away as a pitch. Set from the eval: see eval/EVAL.md. */
-export const PITCH_AT = 0.9;
+/** At or above this log-odds, a message is folded away as a pitch. Set from the eval: see eval/EVAL.md. */
+export const PITCH_AT = 9;
 /** Below this, a message is a customer; in between, unsure. */
-export const CUSTOMER_BELOW = 0.5;
+export const CUSTOMER_BELOW = 6;
 /** Sentences rated per message: offers come early, and a long message is read in full anyway. */
 export const MAX_SENTENCES = 12;
 /** The model reads the start of a message; intent is almost always stated in the first lines. */
@@ -100,16 +100,16 @@ export function questionMessages(body: string, sentence: string): ChatMessage[] 
   ];
 }
 
-export function verdictFor(p: number): Verdict {
-  return p >= PITCH_AT ? "pitch" : p < CUSTOMER_BELOW ? "customer" : "unsure";
+export function verdictFor(score: number): Verdict {
+  return score >= PITCH_AT ? "pitch" : score < CUSTOMER_BELOW ? "customer" : "unsure";
 }
 
 /** Rates each sentence; the message is as much a pitch as its most pitch-like sentence. */
 export async function triage(score: Score, body: string): Promise<Triage> {
   const list = sentences(body).slice(0, MAX_SENTENCES);
   const rated: Rated[] = [];
-  for (const s of list) rated.push({ sentence: s, p: await score(questionMessages(body, s)) });
-  const top = rated.reduce<Rated | null>((a, b) => (a && a.p >= b.p ? a : b), null);
-  const p = top?.p ?? 0;
-  return { verdict: verdictFor(p), quote: top && p >= CUSTOMER_BELOW ? top.sentence : "", p, rated };
+  for (const s of list) rated.push({ sentence: s, score: await score(questionMessages(body, s)) });
+  const top = rated.reduce<Rated | null>((a, b) => (a && a.score >= b.score ? a : b), null);
+  const best = top?.score ?? -Infinity;
+  return { verdict: verdictFor(best), quote: top && best >= CUSTOMER_BELOW ? top.sentence : "", score: best, rated };
 }

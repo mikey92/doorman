@@ -1,4 +1,4 @@
-// One question, one forward pass: how likely is Gemma to answer "Yes" rather than "No"?
+// One question, one forward pass: how much more likely is Gemma to answer "Yes" than "No"?
 // Shared by the browser worker and the Node eval, so both read the model the same way.
 
 import type { TextGenerationPipeline } from "@huggingface/transformers";
@@ -25,7 +25,8 @@ export function makeScorer(generator: TextGenerationPipeline): Score {
     await model.generate({ ...inputs, max_new_tokens: 1, do_sample: false, logits_processor: [peek] } as never);
     if (!pair) throw new Error("No logits came back from the model.");
     const [y, n] = pair as [number, number];
-    // Softmax over just the two answers: the share of "Yes" between Yes and No.
-    return 1 / (1 + Math.exp(n - y));
+    // Log-odds of "Yes" over "No". A small model leans to Yes; its probabilities pile up near 1,
+    // where log-odds still tell 0.999 from 0.99999.
+    return y - n;
   };
 }

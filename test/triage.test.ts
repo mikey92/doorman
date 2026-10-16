@@ -27,7 +27,7 @@ describe("clip", () => {
 
 describe("triage", () => {
   // A stand-in model: P(offer) is high for sentences containing "I help".
-  const fake: Score = async (messages) => (messages.at(-1)!.content.includes('Sentence: "I help') ? 0.97 : 0.1);
+  const fake: Score = async (messages) => (messages.at(-1)!.content.includes('Sentence: "I help') ? 11 : 1);
   it("folds away a message whose most pitch-like sentence clears the bar, quoting it", async () => {
     const t = await triage(fake, pitch);
     expect(t).toMatchObject({ verdict: "pitch", quote: "I help new apps get their first reviews." });
@@ -39,7 +39,7 @@ describe("triage", () => {
   it("puts the band between the two bars in front as unsure", () => {
     expect(verdictFor(PITCH_AT)).toBe("pitch");
     expect(verdictFor(CUSTOMER_BELOW)).toBe("unsure");
-    expect(verdictFor(CUSTOMER_BELOW - 0.01)).toBe("customer");
+    expect(verdictFor(CUSTOMER_BELOW - 0.5)).toBe("customer");
   });
   it("asks about the sentence in the context of the whole message", () => {
     const last = questionMessages(customer, "Can you help me fix this before Friday?").at(-1)!.content;
