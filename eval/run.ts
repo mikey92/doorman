@@ -7,8 +7,8 @@
 // onnxruntime-node with the q4 weights; the page uses WebGPU with q4f16 where it can.
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { makeScorer } from "../src/model.ts";
-import { CUSTOMER_BELOW, MODELS, PITCH_AT, triage, type ModelKey, type Triage } from "../src/triage.ts";
+import { makeScorer } from "./llm-scorer.ts";
+import { CUSTOMER_BELOW, MODELS, PITCH_AT, triage, type ModelKey, type Triage } from "./llm.ts";
 
 export interface Labeled {
   id: string;

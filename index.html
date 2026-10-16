@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Doorman</title>
-    <meta name="description" content="Sorts your contact-form inbox: customers first, sales pitches folded away. Gemma reads each message in your browser; nothing is uploaded." />
+    <meta name="description" content="Sorts your contact-form inbox: customers first, sales pitches folded away. EmbeddingGemma reads each message in your browser; nothing is uploaded." />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b4c7e'/%3E%3Cpath d='M10 25V8h12v17M17 17h1' stroke='%23fff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
   </head>
@@ -14,7 +14,7 @@
         <h1>Doorman</h1>
         <p>
           Your app's or shop's contact form, sorted: <strong>customers first</strong>, sales pitches folded away.
-          Gemma reads each message here, in your browser. Nothing you load leaves this page.
+          EmbeddingGemma reads each message here, in your browser. Nothing you load leaves this page.
         </p>
       </header>
 
@@ -34,13 +34,10 @@
       </section>
 
       <section class="inset" aria-labelledby="model-title">
-        <h2 id="model-title" class="inset-title">Model</h2>
+        <h2 id="model-title" class="inset-title">Sort</h2>
         <div class="row">
-          <select id="model" aria-label="Model">
-            <option value="gemma-3-1b">Gemma 3 1B · 763 MB, once</option>
-            <option value="gemma-3-270m">Gemma 3 270M · 273 MB, once (less accurate)</option>
-          </select>
           <button type="button" id="sort" class="filled" disabled>Sort Inbox</button>
+          <span class="hint">EmbeddingGemma 300M · 197 MB, downloaded once</span>
         </div>
         <p class="hint" id="status" role="status" aria-live="polite"></p>
         <progress id="progress" hidden></progress>
@@ -48,11 +45,11 @@
 
       <section id="results" hidden>
         <h2 class="group-title">Customers <span id="n-customer"></span></h2>
-        <p class="hint">Answer these. Doorman quotes the sentence that shows what each one wants.</p>
+        <p class="hint">Answer these first.</p>
         <ol id="customer" class="cards"></ol>
 
         <h2 class="group-title">Not sure <span id="n-unsure"></span></h2>
-        <p class="hint">Gemma couldn't back up its answer with a sentence from the message, so these stay in front of you.</p>
+        <p class="hint">Close calls. They stay in front of you, with the sentence that looked most like a pitch.</p>
         <ol id="unsure" class="cards"></ol>
 
         <details id="pitch-group">
@@ -64,8 +61,8 @@
 
       <footer class="foot">
         <p>
-          Gemma 3 runs in a Web Worker on your GPU (WebGPU) through Transformers.js; the weights download once from Hugging Face
-          and stay in your browser's cache. Doorman never deletes or answers anything.
+          EmbeddingGemma runs in a Web Worker on your GPU (WebGPU) through Transformers.js, and a 768-weight classifier
+          trained on hand-labelled posts reads its output. The weights download once from Hugging Face and stay in your browser's cache. Doorman never deletes or answers anything.
           <a href="https://github.com/mikey92/doorman">Code and evaluation</a>.
         </p>
       </footer>

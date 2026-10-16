@@ -1,59 +1,53 @@
 /// <reference lib="webworker" />
-// Gemma runs here, off the page's main thread, through Transformers.js and ONNX Runtime Web:
-// WebGPU when the browser has it, WebAssembly on the CPU when it does not. The weights come
+// EmbeddingGemma runs here, off the page's main thread, through Transformers.js and ONNX Runtime
+// Web: WebGPU when the browser has it, WebAssembly on the CPU when it does not. The weights come
 // from the Hugging Face Hub once and then live in the browser's cache.
 
-import { env, pipeline, type TextGenerationPipeline } from "@huggingface/transformers";
-import { makeScorer } from "./model.ts";
-import { MODELS, type ChatMessage, type ModelKey, type Score } from "./triage.ts";
+import { AutoModel, AutoTokenizer, env } from "@huggingface/transformers";
+import { EMBEDDER, makeEmbedder, type Embed } from "./embed.ts";
 
 export type Device = "webgpu" | "wasm";
-export type Dtype = "q4f16" | "q4";
 
 export type ToWorker =
-  | { type: "load"; model: ModelKey; device: Device; dtype: Dtype }
-  | { type: "score"; id: number; messages: ChatMessage[] };
+  | { type: "load"; device: Device }
+  | { type: "embed"; id: number; texts: string[] };
 
 export type FromWorker =
   | { type: "progress"; loaded: number; total: number }
   | { type: "ready"; seconds: number }
-  | { type: "scored"; id: number; p: number }
+  | { type: "embedded"; id: number; vectors: Float32Array[] }
   | { type: "error"; id?: number; message: string };
 
 env.allowLocalModels = false;
 
-let generator: TextGenerationPipeline | null = null;
-let score: Score | null = null;
+let embed: Embed | null = null;
 
-function post(message: FromWorker) {
-  (self as unknown as DedicatedWorkerGlobalScope).postMessage(message);
+function post(message: FromWorker, transfer: Transferable[] = []) {
+  (self as unknown as DedicatedWorkerGlobalScope).postMessage(message, transfer);
 }
 
-async function load(model: ModelKey, device: Device, dtype: Dtype) {
+async function load(device: Device) {
   const started = performance.now();
-  await generator?.dispose();
-  generator = (await pipeline("text-generation", MODELS[model].id, {
-    device,
-    dtype,
-    progress_callback: (p) => {
-      if (p.status === "progress_total") post({ type: "progress", loaded: p.loaded, total: p.total });
-    },
-  })) as TextGenerationPipeline;
-  score = makeScorer(generator);
+  const progress_callback = (p: { status: string; loaded?: number; total?: number }) => {
+    if (p.status === "progress_total") post({ type: "progress", loaded: p.loaded ?? 0, total: p.total ?? 1 });
+  };
+  const tokenizer = await AutoTokenizer.from_pretrained(EMBEDDER.id);
+  // EmbeddingGemma's activations don't support fp16, so q4 weights with fp32 activations everywhere.
+  const model = await AutoModel.from_pretrained(EMBEDDER.id, { device, dtype: "q4", progress_callback } as never);
+  embed = makeEmbedder(tokenizer, model);
   post({ type: "ready", seconds: Math.round((performance.now() - started) / 1000) });
-}
-
-async function rate(id: number, messages: ChatMessage[]) {
-  if (!score) throw new Error("The model is not loaded.");
-  post({ type: "scored", id, p: await score(messages) });
 }
 
 self.onmessage = async (event: MessageEvent<ToWorker>) => {
   const msg = event.data;
   try {
-    if (msg.type === "load") await load(msg.model, msg.device, msg.dtype);
-    else await rate(msg.id, msg.messages);
+    if (msg.type === "load") await load(msg.device);
+    else {
+      if (!embed) throw new Error("The model is not loaded.");
+      const vectors = await embed(msg.texts);
+      post({ type: "embedded", id: msg.id, vectors }, vectors.map((v) => v.buffer as ArrayBuffer));
+    }
   } catch (err) {
-    post({ type: "error", id: msg.type === "score" ? msg.id : undefined, message: err instanceof Error ? err.message : String(err) });
+    post({ type: "error", id: msg.type === "embed" ? msg.id : undefined, message: err instanceof Error ? err.message : String(err) });
   }
 };

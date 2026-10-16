@@ -31,7 +31,7 @@ async function embed() {
   const started = Date.now();
   for (const [i, m] of all.entries()) {
     const ss = sentences(m.body);
-    const [mv, ...sv] = await e([m.body, ...ss]);
+    const [mv, ...sv] = await e([m.body.trim(), ...ss]);
     out[m.id] = { message: Array.from(mv, (x) => +x.toFixed(5)), sentences: ss.map((text, k) => ({ text, v: Array.from(sv[k], (x) => +x.toFixed(5)) })) };
     if (i % 20 === 0) console.log(`${i + 1}/${all.length} (${Math.round((Date.now() - started) / 1000)} s)`);
   }

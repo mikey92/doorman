@@ -2,7 +2,7 @@
 // Shared by the browser worker and the Node eval, so both read the model the same way.
 
 import type { TextGenerationPipeline } from "@huggingface/transformers";
-import type { ChatMessage, Score } from "./triage.ts";
+import type { ChatMessage, Score } from "./llm.ts";
 
 export function makeScorer(generator: TextGenerationPipeline): Score {
   const { tokenizer, model } = generator;

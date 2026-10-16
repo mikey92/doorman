@@ -1,7 +1,9 @@
 import "./styles.css";
 import { parseFile, parsePasted, type Message } from "./parse.ts";
-import { MODELS, triage, type ChatMessage, type ModelKey, type Triage } from "./triage.ts";
-import type { Device, Dtype, FromWorker } from "./worker.ts";
+import { EMBEDDER, type Embed } from "./embed.ts";
+import type { Classifier } from "./linear.ts";
+import { triage, type Triage } from "./triage.ts";
+import type { Device, FromWorker } from "./worker.ts";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -9,7 +11,6 @@ const filesInput = $<HTMLInputElement>("files");
 const drop = $<HTMLLabelElement>("drop");
 const paste = $<HTMLTextAreaElement>("paste");
 const countLine = $<HTMLParagraphElement>("count");
-const modelInput = $<HTMLSelectElement>("model");
 const sortButton = $<HTMLButtonElement>("sort");
 const statusLine = $<HTMLParagraphElement>("status");
 const progress = $<HTMLProgressElement>("progress");
@@ -72,29 +73,29 @@ $("example").addEventListener("click", async () => {
   // The example comes with the verdicts Gemma gave it, so it shows straight away.
   for (const [id, t] of Object.entries(example.verdicts ?? {})) verdicts.set(id, t);
   render();
-  if (verdicts.size) say("Example inbox, already sorted by Gemma 3 1B. Press Sort Inbox to sort it again here.");
+  if (verdicts.size) say("Example inbox, already sorted. Press Sort Inbox to sort it again here, on your own machine.");
 });
 
-// ---------- where Gemma runs ----------
+// ---------- where EmbeddingGemma runs ----------
 
-async function pickDevice(): Promise<{ device: Device; dtype: Dtype }> {
-  const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<{ features: Set<string> } | null> } }).gpu;
+async function pickDevice(): Promise<Device> {
+  const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown | null> } }).gpu;
   if (gpu) {
     try {
-      const adapter = await gpu.requestAdapter();
-      if (adapter) return { device: "webgpu", dtype: adapter.features.has("shader-f16") ? "q4f16" : "q4" };
+      if (await gpu.requestAdapter()) return "webgpu";
     } catch {
       /* fall through to the CPU */
     }
   }
-  return { device: "wasm", dtype: "q4" };
+  return "wasm";
 }
 
 let worker: Worker | null = null;
-let loaded: string | null = null;
+let loaded: Device | null = null;
 let nextId = 0;
-const waiting = new Map<number, { resolve: (p: number) => void; reject: (err: Error) => void }>();
+const waiting = new Map<number, { resolve: (v: Float32Array[]) => void; reject: (err: Error) => void }>();
 let onLoad: { resolve: (seconds: number) => void; reject: (err: Error) => void } | null = null;
+let classifier: Classifier | null = null;
 
 function getWorker(): Worker {
   if (worker) return worker;
@@ -106,8 +107,8 @@ function getWorker(): Worker {
       progress.max = msg.total;
       progress.value = msg.loaded;
     } else if (msg.type === "ready") onLoad?.resolve(msg.seconds);
-    else if (msg.type === "scored") {
-      waiting.get(msg.id)?.resolve(msg.p);
+    else if (msg.type === "embedded") {
+      waiting.get(msg.id)?.resolve(msg.vectors);
       waiting.delete(msg.id);
     } else if (msg.type === "error") {
       const err = new Error(msg.message);
@@ -120,45 +121,44 @@ function getWorker(): Worker {
   return worker;
 }
 
-async function loadModel(key: ModelKey, device: Device, dtype: Dtype) {
-  const tag = `${key}/${device}/${dtype}`;
-  if (loaded === tag) return;
+async function loadModel(device: Device) {
+  if (loaded === device) return;
   const w = getWorker();
   const seconds = await new Promise<number>((resolve, reject) => {
     onLoad = { resolve, reject };
-    w.postMessage({ type: "load", model: key, device, dtype });
+    w.postMessage({ type: "load", device });
   });
-  loaded = tag;
+  loaded = device;
   progress.hidden = true;
-  say(`${MODELS[key].label} ready in ${seconds} s.`);
+  say(`${EMBEDDER.label} ready in ${seconds} s.`);
 }
 
-function score(messages: ChatMessage[]): Promise<number> {
+const embed: Embed = (texts) => {
   const id = nextId++;
   return new Promise((resolve, reject) => {
     waiting.set(id, { resolve, reject });
-    getWorker().postMessage({ type: "score", id, messages });
+    getWorker().postMessage({ type: "embed", id, texts });
   });
-}
+};
 
 sortButton.addEventListener("click", async () => {
-  const key = modelInput.value as ModelKey;
   sortButton.disabled = true;
   try {
-    const { device, dtype } = await pickDevice();
-    const label = MODELS[key].label;
-    say(`Loading ${label} (${MODELS[key].mb[dtype]} MB the first time, then from your browser's cache)…`);
-    await loadModel(key, device, dtype);
+    classifier ??= (await (await fetch("/classifier.json")).json()) as Classifier;
+    const device = await pickDevice();
+    const where = device === "webgpu" ? "GPU" : "CPU";
+    say(`Loading ${EMBEDDER.label} (${EMBEDDER.mb.q4} MB the first time, then from your browser's cache)…`);
+    await loadModel(device);
     verdicts.clear();
     render();
     const started = performance.now();
     for (const [i, m] of messages.entries()) {
-      say(`${label} is reading on the ${device === "webgpu" ? "GPU" : "CPU"}: ${i + 1} of ${messages.length}…`);
-      verdicts.set(m.id, await triage(score, m.body));
+      say(`Reading on the ${where}: ${i + 1} of ${messages.length}…`);
+      verdicts.set(m.id, await triage(embed, classifier, m.body));
       render();
     }
-    const s = Math.round((performance.now() - started) / 1000);
-    say(`Sorted ${messages.length} messages in ${s} s on the ${device === "webgpu" ? "GPU" : "CPU"}.`);
+    const s = ((performance.now() - started) / 1000).toFixed(1);
+    say(`Sorted ${messages.length} message${messages.length === 1 ? "" : "s"} in ${s} s on the ${where}.`);
   } catch (err) {
     say(`Something went wrong: ${err instanceof Error ? err.message : String(err)}`);
   } finally {
