@@ -23,7 +23,7 @@ Cold emails to an app developer are written differently from replies on a forum,
 |---|---|
 | 0.5 | 22 of 23 |
 | 0.6 | 19 of 23 |
-| 0.7 | 17 of 23 |
+| 0.7 | 18 of 23 |
 | 0.8 | 13 of 23 |
 | 0.9 | 4 of 23 |
 | 0.95 | 1 of 23 |
