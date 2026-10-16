@@ -15,6 +15,12 @@ Folds are split by forum topic, so no topic is ever scored by a model that saw a
 | 0.9 | 0 of 115 | 79 of 130 |
 | 0.95 | 0 of 115 | 52 of 130 |
 
+AUC 0.991. The settings above (and the page's bar of 0.8) were chosen on this same table, so read it as a ceiling rather than a promise.
+
+## The 40 messages Gemma 3 1B was tried on
+
+Scored by a model trained on the other 205 forum posts: AUC 1.000; the most pitch-like customer scores 0.28, the least pitch-like pitch 0.83. Gemma 3 1B's numbers on the same messages are in eval/EVAL.md. (Other posts from the same forum topics are in that training set.)
+
 ## My inbox, trained on the forum alone
 
 Cold emails to an app developer are written differently from replies on a forum, and a model that has only read the forum is less sure of them.
@@ -40,6 +46,8 @@ Each sender's messages are scored by a model trained on the forum and on every o
 | 0.8 | 23 of 23 |
 | 0.9 | 19 of 23 |
 | 0.95 | 16 of 23 |
+
+The inbox holds no customers, so this half of the test can only show pitches being caught, not customers being kept.
 
 ## Forum posts on the wrong side of 0.5
 
