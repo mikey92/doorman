@@ -95,3 +95,32 @@ describe("parseEmail with attachments and HTML", () => {
     expect(parseEmail(raw, "y")!.body).toBe("I’m stuck at checkout — help?");
   });
 });
+
+describe("real-inbox quirks", () => {
+  const latin1 = (s: string) => Array.from(new TextEncoder().encode(s), (b) => String.fromCharCode(b)).join("");
+
+  it("doesn't cut an mbox message at a body line that starts with 'From '", () => {
+    const mbox = "From 1@xxx Wed Oct 14 10:00:00 +0000 2026\nFrom: A <a@x.com>\nSubject: s\n\nHello.\nFrom my experience the app breaks.\nNote: please fix.\n";
+    expect(parseFile("t.mbox", mbox).map((m) => m.body)).toEqual(["Hello.\nFrom my experience the app breaks.\nNote: please fix."]);
+  });
+  it("reads the HTML part when the plain part is empty", () => {
+    const raw = 'Content-Type: multipart/alternative; boundary="a"\n\n--a\nContent-Type: text/plain\n\n\n--a\nContent-Type: text/html\n\n<p>Refund please</p>\n--a--\n';
+    expect(parseEmail(raw, "x")!.body).toBe("Refund please");
+  });
+  it("keeps a customer's own 'Reply to…' line", () => {
+    expect(unwrap("Hi, I have a problem.\nReply to this email when you can.\nThanks")).toBe("Hi, I have a problem.\nReply to this email when you can.\nThanks");
+  });
+  it("decodes an 8-bit part in its declared charset", () => {
+    const bytes = new Uint8Array([0xbe, 0xc8, 0xb3, 0xe7]); // "안녕" in EUC-KR
+    const raw = "Subject: =?UTF-8?B?7JWI?= =?UTF-8?B?64WV?=\nContent-Type: text/plain; charset=euc-kr\nContent-Transfer-Encoding: 8bit\n\n" + String.fromCharCode(...bytes);
+    const [m] = parseFile("k.eml", raw);
+    expect(m.body).toBe("안녕");
+    expect(m.subject).toBe("안녕");
+  });
+  it("reads raw UTF-8 in a binary-read file", () => {
+    expect(parseFile("u.eml", latin1("Subject: hi\n\nCafé ☕ order?"))[0].body).toBe("Café ☕ order?");
+  });
+  it("treats pasted text as a message unless it starts with a header", () => {
+    expect(parsePasted("Hi there\nDate: Oct 5 is when I ordered.\n\nStill nothing.", "p")!.body).toBe("Hi there\nDate: Oct 5 is when I ordered.\n\nStill nothing.");
+  });
+});

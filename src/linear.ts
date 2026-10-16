@@ -1,5 +1,5 @@
 // A logistic regression over EmbeddingGemma vectors: 768 weights and a bias, trained in
-// eval/train.ts and shipped as public/classifier.json. Small enough to read in full.
+// eval/classify.ts and shipped as public/classifier.json. Small enough to read in full.
 
 export interface Classifier {
   model: string;

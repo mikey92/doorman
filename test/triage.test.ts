@@ -40,3 +40,12 @@ describe("train", () => {
     expect(predict(w, [0, 1])).toBeLessThan(0.2);
   });
 });
+
+describe("sentences, URLs and abbreviations", () => {
+  it("keeps a URL's ? and . exactly, and doesn't split on e.g.", () => {
+    expect(sentences("Book a call at https://cal.com/x?y=1.5 today. We help apps, e.g. with reviews.")).toEqual([
+      "Book a call at https://cal.com/x?y=1.5 today.",
+      "We help apps, e.g. with reviews.",
+    ]);
+  });
+});

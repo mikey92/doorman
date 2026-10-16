@@ -4,7 +4,7 @@
 //   node eval/run.ts report              eval/EVAL.md from every run in eval/results
 //
 // Messages go through the same triage() the page uses. Only the runtime differs: here it is
-// onnxruntime-node with the q4 weights; the page uses WebGPU with q4f16 where it can.
+// onnxruntime-node with the q4 weights; the page (when it used this model) ran WebGPU with q4f16 where it could.
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { makeScorer } from "./llm-scorer.ts";

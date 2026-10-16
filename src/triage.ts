@@ -42,10 +42,14 @@ export function clip(body: string): string {
 
 /** Sentences worth rating: split on end punctuation and line breaks, three words or more. */
 export function sentences(body: string): string[] {
+  // URLs and "e.g."-style abbreviations are set aside so their dots don't end a sentence, then
+  // put back exactly as they were.
+  const kept: string[] = [];
+  const hold = (t: string) => `\u0000${kept.push(t) - 1}\u0000`;
   return clip(body)
-    .replace(/https?:\/\/\S+/g, (u) => u.replace(/[.?!]/g, "·"))
+    .replace(/https?:\/\/\S+|\b(?:e\.g|i\.e|etc|vs|approx|Mr|Mrs|Ms|Dr|St)\./gi, hold)
     .split(/(?<=[.?!])\s+|\n+/)
-    .map((s) => s.replace(/·/g, ".").replace(/^[-•*\s]+/, "").trim())
+    .map((s) => s.replace(/\u0000(\d+)\u0000/g, (_, i: string) => kept[Number(i)]).replace(/^[-•*\s]+/, "").trim())
     .filter((s) => s.split(/\s+/).length >= 3)
     .slice(0, MAX_SENTENCES);
 }
