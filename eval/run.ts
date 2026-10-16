@@ -84,6 +84,16 @@ export function score(r: Run, pitchAt = PITCH_AT, customerBelow = CUSTOMER_BELOW
   };
 }
 
+/** Chance that a random pitch scores above a random customer (1 = perfect ranking, 0.5 = a coin). */
+export function auc(r: Run): number {
+  const all = Object.values(r);
+  const c = all.filter((x) => x.label === "customer").map((x) => x.score);
+  const p = all.filter((x) => x.label === "pitch").map((x) => x.score);
+  let n = 0;
+  for (const a of p) for (const b of c) n += a > b ? 1 : a === b ? 0.5 : 0;
+  return n / (p.length * c.length);
+}
+
 const row = (name: string, s: Score) =>
   `| ${name} | ${s.customersHidden} of ${s.customers} | ${s.customersUnsure} | ${s.pitchesCaught} of ${s.pitches} | ${s.pitchesUnsure} |`;
 const HEAD = ["| | Customers hidden | Customers left as unsure | Pitches folded away | Pitches left as unsure |", "|---|---|---|---|---|"];
@@ -100,6 +110,10 @@ function report() {
     "",
     ...HEAD,
     ...runs.map(([n, r]) => row(n, score(r))),
+    "",
+    "## How well the score ranks pitches above customers",
+    "",
+    ...runs.map(([n, r]) => `- ${n}: AUC ${auc(r).toFixed(3)} over ${Object.keys(r).length} messages`),
     "",
     "## By source",
     "",
