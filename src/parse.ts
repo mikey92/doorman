@@ -82,24 +82,31 @@ function decodePart(part: Part): string {
   return part.body;
 }
 
-/** The text of a message: its text/plain part, or its text/html part with the tags taken out. */
+const isAttachment = (p: Part) => /^\s*attachment/i.test(p.headers.get("content-disposition") ?? "");
+
+/**
+ * The text of a message: the first text/plain part that isn't an attachment, looking inside
+ * nested multiparts in order; failing that, the first text/html part with its tags taken out.
+ */
 function textOf(part: Part): string | null {
+  return findPart(part, "text/plain") ?? findPart(part, "text/html");
+}
+
+function findPart(part: Part, want: "text/plain" | "text/html"): string | null {
   const type = (part.headers.get("content-type") ?? "text/plain").toLowerCase();
   if (type.startsWith("multipart/")) {
     const boundary = param(part.headers.get("content-type")!, "boundary");
     if (!boundary) return null;
     const children = part.body.split(`--${boundary}`).slice(1).filter((p) => !p.startsWith("--")).map((p) => splitPart(p.replace(/^\n/, "")));
-    const plain = children.find((c) => (c.headers.get("content-type") ?? "text/plain").toLowerCase().startsWith("text/plain"));
-    if (plain) return decodePart(plain);
     for (const c of children) {
-      const t = textOf(c);
-      if (t) return t;
+      const t = findPart(c, want);
+      if (t !== null) return t;
     }
     return null;
   }
-  if (type.startsWith("text/plain")) return decodePart(part);
-  if (type.startsWith("text/html")) return htmlToText(decodePart(part));
-  return null;
+  if (isAttachment(part) || !type.startsWith(want)) return null;
+  const text = decodePart(part);
+  return want === "text/html" ? htmlToText(text) : text;
 }
 
 export function htmlToText(html: string): string {
@@ -107,6 +114,8 @@ export function htmlToText(html: string): string {
     .replace(/<(style|script)[\s\S]*?<\/\1>/gi, "")
     .replace(/<br\s*\/?>|<\/(p|div|tr|li|h\d)>/gi, "\n")
     .replace(/<[^>]+>/g, "")
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")

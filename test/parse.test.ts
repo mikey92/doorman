@@ -51,3 +51,47 @@ describe("unwrap", () => {
     expect(unwrap("Thanks, that worked!\n\nOn Mon, Oct 12, 2026 at 9:00 AM Me wrote:\n> try this")).toBe("Thanks, that worked!");
   });
 });
+
+describe("parseEmail with attachments and HTML", () => {
+  it("reads the body, not a text attachment that comes first at the top level", () => {
+    const raw = [
+      "From: A <a@example.com>",
+      'Content-Type: multipart/mixed; boundary="m"',
+      "",
+      "--m",
+      'Content-Type: multipart/alternative; boundary="a"',
+      "",
+      "--a",
+      "Content-Type: text/plain",
+      "",
+      "Where is my order?",
+      "--a--",
+      "--m",
+      "Content-Type: text/plain",
+      'Content-Disposition: attachment; filename="log.txt"',
+      "",
+      "attached log",
+      "--m--",
+      "",
+    ].join("\n");
+    expect(parseEmail(raw, "x")!.body).toBe("Where is my order?");
+  });
+  it("skips a text attachment listed before the body", () => {
+    const raw = [
+      'Content-Type: multipart/mixed; boundary="m"',
+      "",
+      "--m",
+      "Content-Type: text/plain",
+      'Content-Disposition: attachment; filename="notes.txt"',
+      "",
+      "attached notes",
+      "--m",
+      "Content-Type: text/html",
+      "",
+      "<p>I&#8217;m stuck at checkout &#x2014; help?</p>",
+      "--m--",
+      "",
+    ].join("\n");
+    expect(parseEmail(raw, "y")!.body).toBe("I’m stuck at checkout — help?");
+  });
+});

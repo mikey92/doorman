@@ -18,6 +18,10 @@ const results = $<HTMLElement>("results");
 
 let messages: Message[] = [];
 const verdicts = new Map<string, Triage>();
+/** Bumped whenever the list changes, so a sort in progress stops instead of sorting a stale list. */
+let generation = 0;
+let sorting = false;
+let nextMessage = 0;
 
 function say(text: string) {
   statusLine.textContent = text;
@@ -33,14 +37,20 @@ function setMessages(next: Message[]) {
     return true;
   });
   countLine.textContent = messages.length ? `${messages.length} message${messages.length === 1 ? "" : "s"} loaded.` : "No messages yet.";
-  sortButton.disabled = messages.length === 0;
-  verdicts.clear();
+  // Messages already sorted keep their verdicts; only the new ones wait for the next sort.
+  const kept = new Set(messages.map((m) => m.id));
+  for (const id of [...verdicts.keys()]) if (!kept.has(id)) verdicts.delete(id);
+  generation++;
+  sortButton.disabled = sorting || messages.length === 0;
   render();
 }
 
 async function addFiles(files: FileList | File[]) {
   const added: Message[] = [];
-  for (const f of Array.from(files)) added.push(...parseFile(f.name, await f.text()));
+  for (const f of Array.from(files)) {
+    // Two files can share a name (two exports of "message.eml"); ids must not.
+    for (const m of parseFile(f.name, await f.text())) added.push({ ...m, id: `m${nextMessage++}` });
+  }
   if (!added.length) say("No readable messages in those files.");
   setMessages([...messages, ...added]);
 }
@@ -60,7 +70,7 @@ drop.addEventListener("drop", (e) => {
   if (e.dataTransfer?.files.length) void addFiles(e.dataTransfer.files);
 });
 $("add-paste").addEventListener("click", () => {
-  const m = parsePasted(paste.value, `pasted-${Date.now()}`);
+  const m = parsePasted(paste.value, `m${nextMessage++}`);
   if (!m) return;
   paste.value = "";
   setMessages([...messages, m]);
@@ -118,6 +128,15 @@ function getWorker(): Worker {
       } else onLoad?.reject(err);
     }
   };
+  worker.onerror = (event) => {
+    const err = new Error(event.message || "The model worker stopped.");
+    for (const w of waiting.values()) w.reject(err);
+    waiting.clear();
+    onLoad?.reject(err);
+    worker?.terminate();
+    worker = null;
+    loaded = null;
+  };
   return worker;
 }
 
@@ -142,26 +161,47 @@ const embed: Embed = (texts) => {
 };
 
 sortButton.addEventListener("click", async () => {
+  sorting = true;
   sortButton.disabled = true;
+  const mine = generation;
   try {
     classifier ??= (await (await fetch("/classifier.json")).json()) as Classifier;
-    const device = await pickDevice();
-    const where = device === "webgpu" ? "GPU" : "CPU";
+    let device = await pickDevice();
     say(`Loading ${EMBEDDER.label} (${EMBEDDER.mb.q4} MB the first time, then from your browser's cache)…`);
-    await loadModel(device);
-    verdicts.clear();
-    render();
+    try {
+      await loadModel(device);
+    } catch (err) {
+      // A GPU that WebGPU reports but ONNX Runtime can't use: the CPU still works.
+      if (device !== "webgpu") throw err;
+      device = "wasm";
+      say("The GPU didn't work for this model; loading it on the CPU instead…");
+      await loadModel(device);
+    }
+    const where = device === "webgpu" ? "GPU" : "CPU";
+    const list = messages;
+    // New messages only; if everything has a verdict already, sort it all again.
+    let todo = list.filter((m) => !verdicts.has(m.id));
+    if (!todo.length) {
+      verdicts.clear();
+      render();
+      todo = list;
+    }
     const started = performance.now();
-    for (const [i, m] of messages.entries()) {
-      say(`Reading on the ${where}: ${i + 1} of ${messages.length}…`);
-      verdicts.set(m.id, await triage(embed, classifier, m.body));
+    for (const [i, m] of todo.entries()) {
+      if (generation !== mine) break;
+      say(`Reading on the ${where}: ${i + 1} of ${todo.length}…`);
+      const t = await triage(embed, classifier, m.body);
+      if (generation !== mine) break;
+      verdicts.set(m.id, t);
       render();
     }
     const s = ((performance.now() - started) / 1000).toFixed(1);
-    say(`Sorted ${messages.length} message${messages.length === 1 ? "" : "s"} in ${s} s on the ${where}.`);
+    if (generation !== mine) say("The list changed, so sorting stopped. Press Sort Inbox to sort what's new.");
+    else say(`Sorted ${todo.length} message${todo.length === 1 ? "" : "s"} in ${s} s on the ${where}.`);
   } catch (err) {
     say(`Something went wrong: ${err instanceof Error ? err.message : String(err)}`);
   } finally {
+    sorting = false;
     sortButton.disabled = messages.length === 0;
   }
 });
