@@ -73,6 +73,13 @@ function table(ms: Labeled[], p: Map<string, number>, bars: number[]): string[] 
 
 const BARS = [0.5, 0.6, 0.7, 0.8, 0.9, 0.95];
 
+/** Chance that a random pitch scores above a random customer (1 = always, 0.5 = a coin). */
+function auc(ps: number[], cs: number[]): number {
+  let n = 0;
+  for (const a of ps) for (const b of cs) n += a > b ? 1 : a === b ? 0.5 : 0;
+  return n / (ps.length * cs.length);
+}
+
 function inboxTable(ps: number[], bars: number[]): string[] {
   return ["| Pitch at P ≥ | Pitches folded away |", "|---|---|", ...bars.map((t) => `| ${t} | ${ps.filter((p) => p >= t).length} of ${ps.length} |`)];
 }
@@ -95,6 +102,15 @@ function cv() {
     const tr = [...ms, ...inbox.filter((o) => groupOf(o) !== groupOf(m))];
     return predict(train(tr.map((o) => v[o.id].message), tr.map(y), OPTS), v[m.id].message);
   });
+  const byLabel = (ids: Labeled[], label: string, score: (m: Labeled) => number) => ids.filter((m) => m.label === label).map(score);
+  const forumAuc = auc(byLabel(ms, "pitch", (m) => p.get(m.id)!), byLabel(ms, "customer", (m) => p.get(m.id)!));
+  // The 40 "dev" messages Gemma 3 1B was tried on (eval/EVAL.md), scored by a model trained on the other 205.
+  const dev = ms.filter((m) => m.split === "dev");
+  const rest = ms.filter((m) => m.split !== "dev");
+  const onRest = train(rest.map((m) => v[m.id].message), rest.map(y), OPTS);
+  const devP = (m: Labeled) => predict(onRest, v[m.id].message);
+  const devPitches = byLabel(dev, "pitch", devP);
+  const devCustomers = byLabel(dev, "customer", devP);
   const md = [
     "# Classifier",
     "",
@@ -105,6 +121,12 @@ function cv() {
     "Folds are split by forum topic, so no topic is ever scored by a model that saw any of it.",
     "",
     ...table(ms, p, BARS),
+    "",
+    `AUC ${forumAuc.toFixed(3)}. The settings above (and the page's bar of 0.8) were chosen on this same table, so read it as a ceiling rather than a promise.`,
+    "",
+    "## The 40 messages Gemma 3 1B was tried on",
+    "",
+    `Scored by a model trained on the other ${rest.length} forum posts: AUC ${auc(devPitches, devCustomers).toFixed(3)}; the most pitch-like customer scores ${Math.max(...devCustomers).toFixed(2)}, the least pitch-like pitch ${Math.min(...devPitches).toFixed(2)}. Gemma 3 1B's numbers on the same messages are in eval/EVAL.md. (Other posts from the same forum topics are in that training set.)`,
     "",
     "## My inbox, trained on the forum alone",
     "",
@@ -117,6 +139,8 @@ function cv() {
     "Each sender's messages are scored by a model trained on the forum and on every other sender's messages: the shipped model has seen pitches like these, but never from this sender.",
     "",
     ...inboxTable(heldOut, BARS),
+    "",
+    "The inbox holds no customers, so this half of the test can only show pitches being caught, not customers being kept.",
     "",
     "## Forum posts on the wrong side of 0.5",
     "",
