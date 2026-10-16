@@ -128,6 +128,8 @@ function report() {
 }
 
 const [cmd, a, b, c] = process.argv.slice(2);
-if (cmd === "run" && a && a in MODELS) await run(a as ModelKey, b ?? "", c);
+if (!import.meta.url.endsWith(process.argv[1]!.split("/").pop()!)) {
+  /* imported, not run */
+} else if (cmd === "run" && a && a in MODELS) await run(a as ModelKey, b ?? "", c);
 else if (cmd === "report") report();
 else console.log("usage: node eval/run.ts run <gemma-3-1b|gemma-3-270m> [tag] [dev|test] | report");
