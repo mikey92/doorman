@@ -1,19 +1,20 @@
 // How often does Doorman fold away a real customer, and how many pitches does it catch?
 //
-//   node eval/run.ts run <model> [tag]   triage every message in eval/messages.jsonl, on the CPU
+//   node eval/run.ts run <model> [tag]   rate every message in eval/messages.jsonl, on the CPU
 //   node eval/run.ts report              eval/EVAL.md from every run in eval/results
 //
 // Messages go through the same triage() the page uses. Only the runtime differs: here it is
 // onnxruntime-node with the q4 weights; the page uses WebGPU with q4f16 where it can.
 
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { MODELS, triage, type ChatMessage, type Generate, type ModelKey, type Triage } from "../src/triage.ts";
+import { makeScorer } from "../src/model.ts";
+import { CUSTOMER_BELOW, MODELS, PITCH_AT, triage, type ModelKey, type Triage } from "../src/triage.ts";
 
 export interface Labeled {
   id: string;
   /** What the message really is, decided by reading it. */
   label: "customer" | "pitch";
-  /** Where it came from: "inbox" (sent to my apps), "public" (a public post), see eval/DATA.md. */
+  /** Where it came from: see eval/DATA.md. */
   source: string;
   body: string;
 }
@@ -25,29 +26,35 @@ export function loadMessages(): Labeled[] {
   return readFileSync(DATA, "utf8").split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l) as Labeled);
 }
 
-type Run = Record<string, Triage & { label: Labeled["label"]; source: string }>;
+type Run = Record<string, Triage & { label: Labeled["label"]; source: string; ms: number }>;
 
 async function run(key: ModelKey, tag: string) {
   const { pipeline } = await import("@huggingface/transformers");
   const started = Date.now();
   const generator = await pipeline("text-generation", MODELS[key].id, { dtype: "q4", device: "cpu" });
   console.log(`${MODELS[key].label} loaded in ${Math.round((Date.now() - started) / 1000)} s`);
-  const generate: Generate = async (messages: ChatMessage[], maxNewTokens: number) => {
-    const out = await generator(messages, { max_new_tokens: maxNewTokens, do_sample: false });
-    const reply = (out[0] as { generated_text: ChatMessage[] }).generated_text.at(-1);
-    return typeof reply?.content === "string" ? reply.content : "";
-  };
-  const out: Run = {};
+  const score = makeScorer(generator);
+  const name = `${key}${tag ? `-${tag}` : ""}`;
+  const file = new URL(`${name}.json`, RESULTS);
+  mkdirSync(RESULTS, { recursive: true });
+  // A run can be stopped and picked up again: messages already rated are kept.
+  let out: Run = {};
+  try {
+    out = JSON.parse(readFileSync(file, "utf8")) as Run;
+  } catch {
+    /* a new run */
+  }
   const messages = loadMessages();
   for (const [i, m] of messages.entries()) {
-    const t = await triage(generate, m.body);
-    out[m.id] = { ...t, label: m.label, source: m.source };
-    const mark = t.verdict === "unsure" ? "?" : (t.verdict === "pitch") === (m.label === "pitch") ? "ok" : "WRONG";
-    console.log(`${i + 1}/${messages.length} ${mark} ${m.id} [${m.label} -> ${t.verdict}] ${t.quote || t.attempts.map((a) => a.raw.replace(/\s+/g, " ")).join(" | ")}`);
+    if (out[m.id]) continue;
+    const t0 = Date.now();
+    const t = await triage(score, m.body);
+    out[m.id] = { ...t, label: m.label, source: m.source, ms: Date.now() - t0 };
+    const right = t.verdict === "unsure" ? "?" : (t.verdict === "pitch") === (m.label === "pitch") ? "ok" : "WRONG";
+    console.log(`${i + 1}/${messages.length} ${right} ${m.id} [${m.label} -> ${t.verdict} ${t.p.toFixed(3)}] ${t.quote || t.rated[0]?.sentence || ""}`);
+    writeFileSync(file, JSON.stringify(out, null, 1));
   }
   await generator.dispose();
-  mkdirSync(RESULTS, { recursive: true });
-  writeFileSync(new URL(`${key}${tag ? `-${tag}` : ""}.json`, RESULTS), JSON.stringify(out, null, 1));
 }
 
 export interface Score {
@@ -58,40 +65,62 @@ export interface Score {
   customersUnsure: number;
   pitchesCaught: number;
   pitchesUnsure: number;
-  firstTry: number;
 }
 
-export function score(r: Run): Score {
-  const all = Object.values(r);
+export function score(r: Run, pitchAt = PITCH_AT, customerBelow = CUSTOMER_BELOW, source?: string): Score {
+  const all = Object.values(r).filter((x) => !source || x.source === source);
   const c = all.filter((x) => x.label === "customer");
   const p = all.filter((x) => x.label === "pitch");
+  const unsure = (x: { p: number }) => x.p >= customerBelow && x.p < pitchAt;
   return {
     customers: c.length,
     pitches: p.length,
-    customersHidden: c.filter((x) => x.verdict === "pitch").length,
-    customersUnsure: c.filter((x) => x.verdict === "unsure").length,
-    pitchesCaught: p.filter((x) => x.verdict === "pitch").length,
-    pitchesUnsure: p.filter((x) => x.verdict === "unsure").length,
-    firstTry: all.filter((x) => x.verdict !== "unsure" && x.attempts.length === 1).length,
+    customersHidden: c.filter((x) => x.p >= pitchAt).length,
+    customersUnsure: c.filter(unsure).length,
+    pitchesCaught: p.filter((x) => x.p >= pitchAt).length,
+    pitchesUnsure: p.filter(unsure).length,
   };
 }
 
+const row = (name: string, s: Score) =>
+  `| ${name} | ${s.customersHidden} of ${s.customers} | ${s.customersUnsure} | ${s.pitchesCaught} of ${s.pitches} | ${s.pitchesUnsure} |`;
+const HEAD = ["| | Customers hidden | Customers left as unsure | Pitches folded away | Pitches left as unsure |", "|---|---|---|---|---|"];
+
 function report() {
   const files = readdirSync(RESULTS).filter((f) => f.endsWith(".json")).sort();
-  const rows = files.map((f) => {
-    const s = score(JSON.parse(readFileSync(new URL(f, RESULTS), "utf8")) as Run);
-    return `| ${f.replace(/\.json$/, "")} | ${s.customersHidden} of ${s.customers} | ${s.customersUnsure} | ${s.pitchesCaught} of ${s.pitches} | ${s.pitchesUnsure} | ${s.firstTry} |`;
-  });
-  const md = [
+  const runs = files.map((f) => [f.replace(/\.json$/, ""), JSON.parse(readFileSync(new URL(f, RESULTS), "utf8")) as Run] as const);
+  const lines = [
     "# Evaluation",
     "",
-    "Every run triages every message in `eval/messages.jsonl` with the same `triage()` the page uses (greedy decoding, so a run is reproducible). See `eval/DATA.md` for where the messages come from.",
+    "Every run rates every message in `eval/messages.jsonl` with the same `triage()` the page uses. Scores are read from the model's next-token logits, so a run is reproducible. See `eval/DATA.md` for where the messages come from and how they were labelled.",
     "",
-    "| Run | Customers hidden | Customers left as unsure | Pitches folded away | Pitches left as unsure | Settled on the first try |",
-    "|---|---|---|---|---|---|",
-    ...rows,
+    `## At the page's settings (pitch at P ≥ ${PITCH_AT}, customer below ${CUSTOMER_BELOW})`,
     "",
-  ].join("\n");
+    ...HEAD,
+    ...runs.map(([n, r]) => row(n, score(r))),
+    "",
+    "## By source",
+    "",
+    ...HEAD,
+    ...runs.flatMap(([n, r]) => [...new Set(Object.values(r).map((x) => x.source))].sort().map((src) => row(`${n} · ${src}`, score(r, PITCH_AT, CUSTOMER_BELOW, src)))),
+    "",
+    "## Where the line for \"pitch\" could go",
+    "",
+    "Every message is placed by its highest-rated sentence. Moving the bar trades customers hidden against pitches caught.",
+    "",
+    ...runs.flatMap(([n, r]) => [
+      `### ${n}`,
+      "",
+      "| Pitch at P ≥ | Customers hidden | Pitches folded away |",
+      "|---|---|---|",
+      ...[0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99].map((t) => {
+        const s = score(r, t, Math.min(t, CUSTOMER_BELOW));
+        return `| ${t} | ${s.customersHidden} of ${s.customers} | ${s.pitchesCaught} of ${s.pitches} |`;
+      }),
+      "",
+    ]),
+  ];
+  const md = lines.join("\n");
   writeFileSync(new URL("./EVAL.md", import.meta.url), md);
   console.log(md);
 }

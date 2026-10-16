@@ -1,12 +1,14 @@
-// The part Gemma plays: read one message from a contact form and say who wrote it, a customer or
-// someone selling something, quoting the sentence that shows what they want. This file knows
-// nothing about where the model runs; the browser worker and the Node eval both hand it a
-// `generate` function, so the eval measures exactly what the page does.
+// The part Gemma plays: for each sentence of a contact-form message, how likely is it that the
+// sender is offering the business their own product or service? Gemma answers Yes or No, and we
+// read the probability it gives "Yes" straight from its output, which only an open model lets
+// you do. The sentence it rates highest is quoted on the card, so every verdict comes with the
+// sender's own words. This file knows nothing about where the model runs: the browser worker and
+// the Node eval both hand it a `score` function, so the eval measures exactly what the page does.
 
 export interface ChatMessage { role: "user" | "assistant"; content: string }
 
-/** Runs the model on a chat and returns the text of its reply. */
-export type Generate = (messages: ChatMessage[], maxNewTokens: number) => Promise<string>;
+/** P("Yes") against P("No") for the model's next token after these messages. */
+export type Score = (messages: ChatMessage[]) => Promise<number>;
 
 export const MODELS = {
   "gemma-3-1b": { id: "onnx-community/gemma-3-1b-it-ONNX-GQA", label: "Gemma 3 1B", mb: { q4f16: 763, q4: 859 } },
@@ -17,67 +19,30 @@ export type ModelKey = keyof typeof MODELS;
 
 /**
  * Where a message lands. "customer" and "unsure" stay at the top of the inbox; only "pitch" is
- * folded away, and only when the model quotes a sentence, really in the message, where the
- * sender offers their own product or service.
+ * folded away. Hiding a customer costs a sale and a pitch left in view costs a few seconds, so
+ * the bar for "pitch" is set high and the band in between is "unsure".
  */
 export type Verdict = "customer" | "pitch" | "unsure";
 
-export interface Attempt { raw: string; offer: string | null; ask: string; grounded: boolean; ms: number }
+export interface Rated { sentence: string; p: number }
 
 export interface Triage {
   verdict: Verdict;
-  /** For a pitch, the sentence that offers something; for a customer, the one that asks. */
+  /** The sentence most likely to be an offer, quoted on the card. */
   quote: string;
-  attempts: Attempt[];
+  /** Highest P(offer) over the message's sentences. */
+  p: number;
+  rated: Rated[];
 }
 
-const MAX_NEW_TOKENS = 96;
+/** At or above this, a message is folded away as a pitch. Set from the eval: see eval/EVAL.md. */
+export const PITCH_AT = 0.9;
+/** Below this, a message is a customer; in between, unsure. */
+export const CUSTOMER_BELOW = 0.5;
+/** Sentences rated per message: offers come early, and a long message is read in full anyway. */
+export const MAX_SENTENCES = 12;
 /** The model reads the start of a message; intent is almost always stated in the first lines. */
 export const MAX_CHARS = 1200;
-/** A quote shorter than this shows nothing ("a free app"). */
-export const MIN_QUOTE_WORDS = 5;
-
-function request(body: string): string {
-  return [
-    "This message came in through the contact form of a small online business (an app or a shop).",
-    "",
-    "Message:",
-    '"""',
-    body,
-    '"""',
-    "",
-    "Answer in exactly two lines:",
-    "OFFER: copy, word for word, the sentence where the sender offers the business their OWN product, app, service or help. If the sender offers nothing of their own, write NONE.",
-    "ASK: copy, word for word, the sentence that says what the sender wants.",
-  ].join("\n");
-}
-
-// Three worked examples written for this file (none is in the eval set): a customer, a seller,
-// and a seller who opens with a question, as many do.
-const EXAMPLES: [string, string][] = [
-  [
-    "Hi, I installed your app yesterday but the discount isn't showing on my product pages. I'm on the Dawn theme. Could you take a look? Thanks, Maria",
-    "OFFER: NONE\nASK: Could you take a look?",
-  ],
-  [
-    "Hello! I came across your store and love what you're building. I help Shopify brands get more traffic with SEO and backlinks. Would you be open to a quick call this week?",
-    "OFFER: I help Shopify brands get more traffic with SEO and backlinks.\nASK: Would you be open to a quick call this week?",
-  ],
-  [
-    "Are you still looking for a way to get more reviews? Our app sends review requests by SMS and it's free for the first 100 orders. Happy to set it up for you.",
-    "OFFER: Our app sends review requests by SMS and it's free for the first 100 orders.\nASK: Happy to set it up for you.",
-  ],
-];
-
-export function triageMessages(body: string): ChatMessage[] {
-  return [
-    ...EXAMPLES.flatMap(([b, answer]): ChatMessage[] => [
-      { role: "user", content: request(b) },
-      { role: "assistant", content: answer },
-    ]),
-    { role: "user", content: request(clip(body)) },
-  ];
-}
 
 /** The start of the message, cut at a sentence or line end before MAX_CHARS. */
 export function clip(body: string): string {
@@ -88,79 +53,63 @@ export function clip(body: string): string {
   return (cut > MAX_CHARS / 2 ? head.slice(0, cut + 1) : head).trim();
 }
 
-const unquote = (x: string) => x.trim().replace(/^["'“”‘’]+|["'“”‘’]+$/g, "").trim();
-
-/** Pulls OFFER and ASK out of a reply; tolerant of bold markers, quotes and case. OFFER is null when missing. */
-export function parseAnswer(raw: string): { offer: string | null; ask: string } {
-  const text = raw.replace(/\*\*/g, "");
-  const offer = /OFFER\s*:\s*(.+)/i.exec(text)?.[1];
-  const ask = /ASK\s*:\s*(.+)/i.exec(text)?.[1] ?? "";
-  return { offer: offer === undefined ? null : unquote(offer), ask: unquote(ask) };
+/** Sentences worth asking about: split on end punctuation and line breaks, three words or more. */
+export function sentences(body: string): string[] {
+  return clip(body)
+    .replace(/https?:\/\/\S+/g, (u) => u.replace(/[.?!]/g, "·"))
+    .split(/(?<=[.?!])\s+|\n+/)
+    .map((s) => s.replace(/·/g, ".").replace(/^[-•*\s]+/, "").trim())
+    .filter((s) => s.split(/\s+/).length >= 3);
 }
 
-export const isNone = (offer: string) => /^(none|nothing|n\/a)\b/i.test(offer);
-
-/** Lowercase words, apostrophes and punctuation dropped: what "word for word" is compared on. */
-export function words(text: string): string[] {
-  return text
-    .toLowerCase()
-    .replace(/[’']/g, "")
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter(Boolean);
+function question(body: string, sentence: string): string {
+  return [
+    "This message came in through the contact form of a small online business (an app or a shop).",
+    "",
+    "Message:",
+    '"""',
+    body,
+    '"""',
+    "",
+    `Sentence: "${sentence}"`,
+    "",
+    "In this sentence, is the sender offering the business their OWN product, app, service, agency or help?",
+    "Answer Yes or No.",
+  ].join("\n");
 }
 
-/**
- * Is the quote really in the message? Its words must appear there as one unbroken run, allowing
- * the model to drop a few words from either end.
- */
-export function isGrounded(quote: string, body: string): boolean {
-  const q = words(quote);
-  if (q.length < MIN_QUOTE_WORDS) return false;
-  const b = ` ${words(body).join(" ")} `;
-  if (b.includes(` ${q.join(" ")} `)) return true;
-  // The longest run of the quote found in the message must cover nearly all of it.
-  let best = 0;
-  for (let i = 0; i < q.length; i++) {
-    for (let j = q.length; j > i + best; j--) {
-      if (b.includes(` ${q.slice(i, j).join(" ")} `)) {
-        best = j - i;
-        break;
-      }
-    }
-  }
-  return best >= MIN_QUOTE_WORDS && best >= q.length * 0.8;
+// Worked examples written for this file (none is in the eval set): an offer, a request from a
+// customer, and a seller's friendly opener, which is not itself the offer.
+const PITCH_EXAMPLE =
+  "Hi there! I came across your app and love what you're building. I help Shopify apps get their first 50 reviews. Would you be open to a quick call this week?";
+const CUSTOMER_EXAMPLE =
+  "Hello, I installed your app yesterday but the discount isn't showing on my product pages. I'm on the Dawn theme. Could you take a look?";
+const EXAMPLES: [string, string, "Yes" | "No"][] = [
+  [PITCH_EXAMPLE, "I help Shopify apps get their first 50 reviews.", "Yes"],
+  [CUSTOMER_EXAMPLE, "Could you take a look?", "No"],
+  [PITCH_EXAMPLE, "Hi there! I came across your app and love what you're building.", "No"],
+];
+
+export function questionMessages(body: string, sentence: string): ChatMessage[] {
+  return [
+    ...EXAMPLES.flatMap(([b, s, a]): ChatMessage[] => [
+      { role: "user", content: question(b, s) },
+      { role: "assistant", content: a },
+    ]),
+    { role: "user", content: question(clip(body), sentence) },
+  ];
 }
 
-function retryRequest(offer: string | null): string {
-  if (offer === null) return "Answer in exactly two lines, OFFER: and ASK:, as above.";
-  return (
-    `"${offer}" is not a sentence from the message. ` +
-    "Copy the sentence word for word from the message, or write NONE if the sender offers nothing of their own. Answer in exactly two lines."
-  );
+export function verdictFor(p: number): Verdict {
+  return p >= PITCH_AT ? "pitch" : p < CUSTOMER_BELOW ? "customer" : "unsure";
 }
 
-/**
- * Ask once; if the answer is malformed or its OFFER isn't in the message, ask once more with the
- * problem named. A grounded OFFER folds the message away as a pitch; NONE makes it a customer;
- * anything else stays at the top as unsure.
- */
-export async function triage(generate: Generate, body: string): Promise<Triage> {
-  let messages = triageMessages(body);
-  const attempts: Attempt[] = [];
-  for (let round = 0; round < 2; round++) {
-    const started = Date.now();
-    const raw = await generate(messages, MAX_NEW_TOKENS);
-    const { offer, ask } = parseAnswer(raw);
-    const none = offer !== null && isNone(offer);
-    const grounded = offer !== null && !none && isGrounded(offer, body);
-    attempts.push({ raw, offer, ask, grounded, ms: Date.now() - started });
-    if (grounded) return { verdict: "pitch", quote: offer!, attempts };
-    if (none) return { verdict: "customer", quote: isGrounded(ask, body) ? ask : "", attempts };
-    messages = [
-      ...messages,
-      { role: "assistant", content: raw.trim() || "(no answer)" },
-      { role: "user", content: retryRequest(offer) },
-    ];
-  }
-  return { verdict: "unsure", quote: "", attempts };
+/** Rates each sentence; the message is as much a pitch as its most pitch-like sentence. */
+export async function triage(score: Score, body: string): Promise<Triage> {
+  const list = sentences(body).slice(0, MAX_SENTENCES);
+  const rated: Rated[] = [];
+  for (const s of list) rated.push({ sentence: s, p: await score(questionMessages(body, s)) });
+  const top = rated.reduce<Rated | null>((a, b) => (a && a.p >= b.p ? a : b), null);
+  const p = top?.p ?? 0;
+  return { verdict: verdictFor(p), quote: top && p >= CUSTOMER_BELOW ? top.sentence : "", p, rated };
 }

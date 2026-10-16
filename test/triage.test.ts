@@ -1,34 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { clip, isGrounded, MAX_CHARS, parseAnswer, triage, type Generate } from "../src/triage.ts";
+import { clip, CUSTOMER_BELOW, MAX_CHARS, PITCH_AT, questionMessages, sentences, triage, verdictFor, type Score } from "../src/triage.ts";
 
 const pitch =
   "Hello, I came across your Shopify app and noticed it's still early. I help new apps get their first reviews. Would you be open to a short call this week?";
 const customer = "Hi! The net terms option doesn't show at checkout for my wholesale customers. Can you help me fix this before Friday?";
 
-describe("parseAnswer", () => {
-  it("reads both lines, with bold markers and quotes", () => {
-    expect(parseAnswer('**OFFER:** NONE\n**ASK:** "Can you help me fix this before Friday?"')).toEqual({
-      offer: "NONE",
-      ask: "Can you help me fix this before Friday?",
-    });
-  });
-  it("leaves the offer null when the line is missing", () => {
-    expect(parseAnswer("ASK: a call").offer).toBeNull();
-  });
-});
-
-describe("isGrounded", () => {
-  it("accepts a sentence copied from the message, ignoring case and punctuation", () => {
-    expect(isGrounded("would you be open to a short call this week", pitch)).toBe(true);
-  });
-  it("accepts a quote with a word or two trimmed or added at an end", () => {
-    expect(isGrounded("Sure: would you be open to a short call this week?", pitch)).toBe(true);
-  });
-  it("rejects a paraphrase", () => {
-    expect(isGrounded("They want to sell me app reviews.", pitch)).toBe(false);
-  });
-  it("rejects a quote too short to show anything", () => {
-    expect(isGrounded("Hello", pitch)).toBe(false);
+describe("sentences", () => {
+  it("splits on end punctuation and lines, keeps URLs whole, and drops fragments", () => {
+    expect(sentences("Hi!\nI help apps grow. See https://example.com/a.b for more.\n- Thanks a lot\nBest")).toEqual([
+      "I help apps grow.",
+      "See https://example.com/a.b for more.",
+      "Thanks a lot",
+    ]);
   });
 });
 
@@ -43,26 +26,24 @@ describe("clip", () => {
 });
 
 describe("triage", () => {
-  const scripted = (...answers: string[]): Generate => {
-    let i = 0;
-    return async () => answers[i++] ?? "";
-  };
-  it("folds away a message whose offer is quoted from it", async () => {
-    const t = await triage(scripted("OFFER: I help new apps get their first reviews.\nASK: Would you be open to a short call this week?"), pitch);
+  // A stand-in model: P(offer) is high for sentences containing "I help".
+  const fake: Score = async (messages) => (messages.at(-1)!.content.includes('Sentence: "I help') ? 0.97 : 0.1);
+  it("folds away a message whose most pitch-like sentence clears the bar, quoting it", async () => {
+    const t = await triage(fake, pitch);
     expect(t).toMatchObject({ verdict: "pitch", quote: "I help new apps get their first reviews." });
-    expect(t.attempts).toHaveLength(1);
+    expect(t.rated).toHaveLength(3);
   });
-  it("retries once when the offer is not in the message, then accepts a grounded one", async () => {
-    const t = await triage(scripted("OFFER: They sell reviews to apps.\nASK: a call", "OFFER: I help new apps get their first reviews.\nASK: a call"), pitch);
-    expect(t.verdict).toBe("pitch");
-    expect(t.attempts).toHaveLength(2);
+  it("keeps a message with no offer as a customer, with nothing quoted", async () => {
+    expect(await triage(fake, customer)).toMatchObject({ verdict: "customer", quote: "" });
   });
-  it("keeps a message in front as unsure when the offer never holds up", async () => {
-    const t = await triage(scripted("ASK: hm", "OFFER: something else entirely here today\nASK: x"), pitch);
-    expect(t.verdict).toBe("unsure");
+  it("puts the band between the two bars in front as unsure", () => {
+    expect(verdictFor(PITCH_AT)).toBe("pitch");
+    expect(verdictFor(CUSTOMER_BELOW)).toBe("unsure");
+    expect(verdictFor(CUSTOMER_BELOW - 0.01)).toBe("customer");
   });
-  it("makes NONE a customer, quoting the ask when it is really there", async () => {
-    const t = await triage(scripted("OFFER: NONE\nASK: Can you help me fix this before Friday?"), customer);
-    expect(t).toMatchObject({ verdict: "customer", quote: "Can you help me fix this before Friday?" });
+  it("asks about the sentence in the context of the whole message", () => {
+    const last = questionMessages(customer, "Can you help me fix this before Friday?").at(-1)!.content;
+    expect(last).toContain(customer);
+    expect(last).toContain('Sentence: "Can you help me fix this before Friday?"');
   });
 });

@@ -93,7 +93,7 @@ async function pickDevice(): Promise<{ device: Device; dtype: Dtype }> {
 let worker: Worker | null = null;
 let loaded: string | null = null;
 let nextId = 0;
-const waiting = new Map<number, { resolve: (text: string) => void; reject: (err: Error) => void }>();
+const waiting = new Map<number, { resolve: (p: number) => void; reject: (err: Error) => void }>();
 let onLoad: { resolve: (seconds: number) => void; reject: (err: Error) => void } | null = null;
 
 function getWorker(): Worker {
@@ -106,8 +106,8 @@ function getWorker(): Worker {
       progress.max = msg.total;
       progress.value = msg.loaded;
     } else if (msg.type === "ready") onLoad?.resolve(msg.seconds);
-    else if (msg.type === "generated") {
-      waiting.get(msg.id)?.resolve(msg.text);
+    else if (msg.type === "scored") {
+      waiting.get(msg.id)?.resolve(msg.p);
       waiting.delete(msg.id);
     } else if (msg.type === "error") {
       const err = new Error(msg.message);
@@ -133,11 +133,11 @@ async function loadModel(key: ModelKey, device: Device, dtype: Dtype) {
   say(`${MODELS[key].label} ready in ${seconds} s.`);
 }
 
-function generate(messages: ChatMessage[], maxNewTokens: number): Promise<string> {
+function score(messages: ChatMessage[]): Promise<number> {
   const id = nextId++;
   return new Promise((resolve, reject) => {
     waiting.set(id, { resolve, reject });
-    getWorker().postMessage({ type: "generate", id, messages, maxNewTokens });
+    getWorker().postMessage({ type: "score", id, messages });
   });
 }
 
@@ -154,7 +154,7 @@ sortButton.addEventListener("click", async () => {
     const started = performance.now();
     for (const [i, m] of messages.entries()) {
       say(`${label} is reading on the ${device === "webgpu" ? "GPU" : "CPU"}: ${i + 1} of ${messages.length}…`);
-      verdicts.set(m.id, await triage(generate, m.body));
+      verdicts.set(m.id, await triage(score, m.body));
       render();
     }
     const s = Math.round((performance.now() - started) / 1000);
