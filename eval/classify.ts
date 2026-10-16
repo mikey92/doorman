@@ -1,6 +1,6 @@
 // Doorman's classifier: EmbeddingGemma vectors and a logistic regression trained on the
-// hand-labelled forum posts. The inbox pitches (eval/inbox.jsonl) are never trained on: they are
-// the test that matters, real messages sent to my own apps.
+// hand-labelled forum posts and my inbox's pitches. The evaluation keeps them apart: forum topics
+// are scored by models that never saw them, and each inbox sender by a model that never saw them.
 //
 //   node eval/classify.ts embed   embed every message and its sentences → eval/cache/embeddings.json
 //   node eval/classify.ts cv      cross-validation on the forum, and the inbox held out → eval/CLASSIFIER.md
