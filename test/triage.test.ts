@@ -7,13 +7,13 @@ const customer = "Hi! The net terms option doesn't show at checkout for my whole
 
 describe("parseAnswer", () => {
   it("reads both lines, with bold markers and quotes", () => {
-    expect(parseAnswer('**WANTS:** "Can you help me fix this before Friday?"\n**FROM:** customer')).toEqual({
-      who: "customer",
-      quote: "Can you help me fix this before Friday?",
+    expect(parseAnswer('**OFFER:** NONE\n**ASK:** "Can you help me fix this before Friday?"')).toEqual({
+      offer: "NONE",
+      ask: "Can you help me fix this before Friday?",
     });
   });
-  it("leaves who empty when FROM is missing or something else", () => {
-    expect(parseAnswer("WANTS: a call\nFROM: marketer").who).toBeNull();
+  it("leaves the offer null when the line is missing", () => {
+    expect(parseAnswer("ASK: a call").offer).toBeNull();
   });
 });
 
@@ -47,25 +47,22 @@ describe("triage", () => {
     let i = 0;
     return async () => answers[i++] ?? "";
   };
-  it("folds away a grounded seller", async () => {
-    const t = await triage(scripted("WANTS: Would you be open to a short call this week?\nFROM: seller"), pitch);
-    expect(t.verdict).toBe("pitch");
+  it("folds away a message whose offer is quoted from it", async () => {
+    const t = await triage(scripted("OFFER: I help new apps get their first reviews.\nASK: Would you be open to a short call this week?"), pitch);
+    expect(t).toMatchObject({ verdict: "pitch", quote: "I help new apps get their first reviews." });
     expect(t.attempts).toHaveLength(1);
   });
-  it("retries once when the quote is not in the message, then accepts a grounded answer", async () => {
-    const t = await triage(
-      scripted("WANTS: They sell reviews.\nFROM: seller", "WANTS: I help new apps get their first reviews.\nFROM: seller"),
-      pitch,
-    );
+  it("retries once when the offer is not in the message, then accepts a grounded one", async () => {
+    const t = await triage(scripted("OFFER: They sell reviews to apps.\nASK: a call", "OFFER: I help new apps get their first reviews.\nASK: a call"), pitch);
     expect(t.verdict).toBe("pitch");
     expect(t.attempts).toHaveLength(2);
   });
-  it("keeps a message in front as unsure when the answer never holds up", async () => {
-    const t = await triage(scripted("FROM: seller", "WANTS: something else entirely here\nFROM: seller"), pitch);
+  it("keeps a message in front as unsure when the offer never holds up", async () => {
+    const t = await triage(scripted("ASK: hm", "OFFER: something else entirely here today\nASK: x"), pitch);
     expect(t.verdict).toBe("unsure");
   });
-  it("keeps a grounded customer as a customer", async () => {
-    const t = await triage(scripted("WANTS: Can you help me fix this before Friday?\nFROM: customer"), customer);
-    expect(t.verdict).toBe("customer");
+  it("makes NONE a customer, quoting the ask when it is really there", async () => {
+    const t = await triage(scripted("OFFER: NONE\nASK: Can you help me fix this before Friday?"), customer);
+    expect(t).toMatchObject({ verdict: "customer", quote: "Can you help me fix this before Friday?" });
   });
 });

@@ -15,26 +15,27 @@ export const MODELS = {
 
 export type ModelKey = keyof typeof MODELS;
 
-export type Who = "customer" | "seller";
-
 /**
  * Where a message lands. "customer" and "unsure" stay at the top of the inbox; only "pitch" is
- * folded away, and only when the model says seller AND quotes a sentence that is really there.
+ * folded away, and only when the model quotes a sentence, really in the message, where the
+ * sender offers their own product or service.
  */
 export type Verdict = "customer" | "pitch" | "unsure";
 
-export interface Attempt { raw: string; who: Who | null; quote: string; grounded: boolean; ms: number }
+export interface Attempt { raw: string; offer: string | null; ask: string; grounded: boolean; ms: number }
 
 export interface Triage {
   verdict: Verdict;
-  /** The sender's own sentence that shows what they want, when the model found one. */
+  /** For a pitch, the sentence that offers something; for a customer, the one that asks. */
   quote: string;
   attempts: Attempt[];
 }
 
-const MAX_NEW_TOKENS = 80;
+const MAX_NEW_TOKENS = 96;
 /** The model reads the start of a message; intent is almost always stated in the first lines. */
 export const MAX_CHARS = 1200;
+/** A quote shorter than this shows nothing ("a free app"). */
+export const MIN_QUOTE_WORDS = 5;
 
 function request(body: string): string {
   return [
@@ -46,23 +47,25 @@ function request(body: string): string {
     '"""',
     "",
     "Answer in exactly two lines:",
-    "WANTS: copy, word for word, the one sentence from the message that shows what the sender wants",
-    "FROM: customer or seller",
-    "",
-    "customer = uses, or wants to use or buy, this business's product, and needs something from it.",
-    "seller = offers the business their own service, product or partnership (marketing, reviews, installs, design, development, funding).",
+    "OFFER: copy, word for word, the sentence where the sender offers the business their OWN product, app, service or help. If the sender offers nothing of their own, write NONE.",
+    "ASK: copy, word for word, the sentence that says what the sender wants.",
   ].join("\n");
 }
 
-// Two worked examples, one each way, written for this file: none of them is in the eval set.
+// Three worked examples written for this file (none is in the eval set): a customer, a seller,
+// and a seller who opens with a question, as many do.
 const EXAMPLES: [string, string][] = [
   [
     "Hi, I installed your app yesterday but the discount isn't showing on my product pages. I'm on the Dawn theme. Could you take a look? Thanks, Maria",
-    "WANTS: Could you take a look?\nFROM: customer",
+    "OFFER: NONE\nASK: Could you take a look?",
   ],
   [
-    "Hello! I came across your store and love what you're building. I help Shopify brands get more traffic with SEO and backlinks. Would you be open to a quick call this week to discuss how I can help you grow?",
-    "WANTS: Would you be open to a quick call this week to discuss how I can help you grow?\nFROM: seller",
+    "Hello! I came across your store and love what you're building. I help Shopify brands get more traffic with SEO and backlinks. Would you be open to a quick call this week?",
+    "OFFER: I help Shopify brands get more traffic with SEO and backlinks.\nASK: Would you be open to a quick call this week?",
+  ],
+  [
+    "Are you still looking for a way to get more reviews? Our app sends review requests by SMS and it's free for the first 100 orders. Happy to set it up for you.",
+    "OFFER: Our app sends review requests by SMS and it's free for the first 100 orders.\nASK: Happy to set it up for you.",
   ],
 ];
 
@@ -85,13 +88,17 @@ export function clip(body: string): string {
   return (cut > MAX_CHARS / 2 ? head.slice(0, cut + 1) : head).trim();
 }
 
-/** Pulls WANTS and FROM out of a reply; tolerant of bold markers, quotes and case. */
-export function parseAnswer(raw: string): { who: Who | null; quote: string } {
+const unquote = (x: string) => x.trim().replace(/^["'“”‘’]+|["'“”‘’]+$/g, "").trim();
+
+/** Pulls OFFER and ASK out of a reply; tolerant of bold markers, quotes and case. OFFER is null when missing. */
+export function parseAnswer(raw: string): { offer: string | null; ask: string } {
   const text = raw.replace(/\*\*/g, "");
-  const wants = /WANTS\s*:\s*(.+)/i.exec(text)?.[1]?.trim() ?? "";
-  const from = /FROM\s*:\s*\W*(customer|seller)/i.exec(text)?.[1]?.toLowerCase() as Who | undefined;
-  return { who: from ?? null, quote: wants.replace(/^["'“”‘’]+|["'“”‘’]+$/g, "").trim() };
+  const offer = /OFFER\s*:\s*(.+)/i.exec(text)?.[1];
+  const ask = /ASK\s*:\s*(.+)/i.exec(text)?.[1] ?? "";
+  return { offer: offer === undefined ? null : unquote(offer), ask: unquote(ask) };
 }
+
+export const isNone = (offer: string) => /^(none|nothing|n\/a)\b/i.test(offer);
 
 /** Lowercase words, apostrophes and punctuation dropped: what "word for word" is compared on. */
 export function words(text: string): string[] {
@@ -104,11 +111,11 @@ export function words(text: string): string[] {
 
 /**
  * Is the quote really in the message? Its words must appear there as one unbroken run, allowing
- * the model to drop a few words from either end. A quote of fewer than four words shows nothing.
+ * the model to drop a few words from either end.
  */
 export function isGrounded(quote: string, body: string): boolean {
   const q = words(quote);
-  if (q.length < 4) return false;
+  if (q.length < MIN_QUOTE_WORDS) return false;
   const b = ` ${words(body).join(" ")} `;
   if (b.includes(` ${q.join(" ")} `)) return true;
   // The longest run of the quote found in the message must cover nearly all of it.
@@ -121,21 +128,21 @@ export function isGrounded(quote: string, body: string): boolean {
       }
     }
   }
-  return best >= 4 && best >= q.length * 0.8;
+  return best >= MIN_QUOTE_WORDS && best >= q.length * 0.8;
 }
 
-function retryRequest(parsed: { who: Who | null; quote: string }): string {
-  if (!parsed.quote || !parsed.who) return "Answer in exactly two lines, WANTS: and FROM:, as above.";
+function retryRequest(offer: string | null): string {
+  if (offer === null) return "Answer in exactly two lines, OFFER: and ASK:, as above.";
   return (
-    `"${parsed.quote}" is not a sentence from the message. ` +
-    "Copy the sentence word for word from the message, then FROM: customer or seller. Answer in exactly two lines."
+    `"${offer}" is not a sentence from the message. ` +
+    "Copy the sentence word for word from the message, or write NONE if the sender offers nothing of their own. Answer in exactly two lines."
   );
 }
 
 /**
- * Ask once; if the answer is malformed or its quote isn't in the message, ask once more with the
- * problem named. A message is folded away as a pitch only on a grounded "seller"; a grounded
- * "customer" is a customer; anything else stays at the top as unsure.
+ * Ask once; if the answer is malformed or its OFFER isn't in the message, ask once more with the
+ * problem named. A grounded OFFER folds the message away as a pitch; NONE makes it a customer;
+ * anything else stays at the top as unsure.
  */
 export async function triage(generate: Generate, body: string): Promise<Triage> {
   let messages = triageMessages(body);
@@ -143,16 +150,16 @@ export async function triage(generate: Generate, body: string): Promise<Triage> 
   for (let round = 0; round < 2; round++) {
     const started = Date.now();
     const raw = await generate(messages, MAX_NEW_TOKENS);
-    const parsed = parseAnswer(raw);
-    const grounded = isGrounded(parsed.quote, body);
-    attempts.push({ raw, who: parsed.who, quote: parsed.quote, grounded, ms: Date.now() - started });
-    if (parsed.who && grounded) {
-      return { verdict: parsed.who === "seller" ? "pitch" : "customer", quote: parsed.quote, attempts };
-    }
+    const { offer, ask } = parseAnswer(raw);
+    const none = offer !== null && isNone(offer);
+    const grounded = offer !== null && !none && isGrounded(offer, body);
+    attempts.push({ raw, offer, ask, grounded, ms: Date.now() - started });
+    if (grounded) return { verdict: "pitch", quote: offer!, attempts };
+    if (none) return { verdict: "customer", quote: isGrounded(ask, body) ? ask : "", attempts };
     messages = [
       ...messages,
       { role: "assistant", content: raw.trim() || "(no answer)" },
-      { role: "user", content: retryRequest(parsed) },
+      { role: "user", content: retryRequest(offer) },
     ];
   }
   return { verdict: "unsure", quote: "", attempts };
