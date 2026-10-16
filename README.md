@@ -38,7 +38,7 @@ No server and no API keys. EmbeddingGemma's weights (197 MB, q4) come from the H
 | Split into sentences | `src/triage.ts` |
 | Embed the message and each sentence with EmbeddingGemma 300M (`task: classification \| query: ` prefix), via Transformers.js on WebGPU | `src/embed.ts`, `src/worker.ts` |
 | P(pitch) from 768 weights and a bias (`public/classifier.json`); the message's P decides; its most pitch-like sentence is quoted | `src/linear.ts`, `src/triage.ts` |
-| Train and evaluate: cross-validation by forum topic, then a test on my own inbox, never trained on | `eval/classify.ts` |
+| Train and evaluate: cross-validation by forum topic, and my inbox one sender at a time | `eval/classify.ts` |
 
 `eval/run.ts` is the first attempt, kept because the write-up talks about it: Gemma 3 1B asked "is this sentence an offer? Yes or No", read from its next-token logits.
 
