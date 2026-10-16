@@ -1,88 +1,88 @@
 {
  "messages": [
   {
-   "id": "forum-387503-1",
-   "subject": "Question from the Shopify Community",
-   "date": "",
-   "body": "I want to give discount to customers but that discount is applicable to a specific banks debit or credit card. How can i do that??",
-   "from": "A merchant (public forum post)"
-  },
-  {
-   "id": "inbox-2026-09-01-7",
-   "subject": "Someone has a question about Upright Net Terms",
-   "date": "",
-   "body": "Hi,\nMy name is [name]. I work with Shopify store owners and app developers to improve app visibility, genuine reviews, and installations. I came across your store while researching Shopify merchants and thought there could be an opportunity to help you reach more relevant users.\nIf you're currently looking for support with app reviews, installations, engagement, or visibility, I'd be happy to share how I can help and explain how the process works.\nWould you be interested in learning more? Simply reply \"Interested,\" and I'll send you the details so we can discuss the next step.",
-   "from": "[name] (my apps' contact form, anonymised)"
-  },
-  {
-   "id": "inbox-2026-09-16-19",
-   "subject": "Someone has a question about Upright Net Terms",
-   "date": "",
-   "body": "Hey, quick one for you. I found your Shopify app the other day and figured it would fit my Discord community really well.\nThe community revolves around Shopify, e-commerce, growing revenue, and practical merchant tools, so your app would be shown to an audience that fits it well.\nInterested? We can sort out the pricing for a promotional post in the community.\nAny interest on your side?\nCommunity link, in case you want to browse: [link]",
-   "from": "[name] (my apps' contact form, anonymised)"
-  },
-  {
-   "id": "forum-628728-1",
-   "subject": "Question from the Shopify Community",
-   "date": "",
-   "body": "I’m using the Shopify bundle app which is great. But it doesn’t do dynamic pricing which is giving us a headache! Is there another simple bundle app that has this feature? Don’t want anything fancy.",
-   "from": "A merchant (public forum post)"
-  },
-  {
-   "id": "inbox-2026-09-14-3",
-   "subject": "Someone has a question about Upright Net Terms",
-   "date": "",
-   "body": "Hi,\nI came across your Shopify app and noticed it's still early in its launch phase and building its initial merchant traction.\nI'm a Shopify Partner and e-commerce specialist. I manage a network of active Shopify stores and work directly with live store owners. I can connect your app with real merchants who will install, test, and use it in active Shopify environments, providing direct user feedback and genuine merchant reviews based on their experience.\nRunning Shopify App Store ads can burn budget fast and without solid social proof, ad traffic rarely converts because merchants hesitate to install unproven apps. Building organic merchant usage and verified reviews gives you a far higher ROI than paid ads: it boosts your long-term search ranking, drives sustainable organic installs, and helps you qualify for the Built for Shopify badge.\nTo be completely clear, this is 100% genuine store activity no bots, fake accounts, or fabricated reviews.\nIf you're looking to build sustainable traction and push toward that Built for Shopify status without wasting money on ads, I can share how we structure the process and pricing.\nAre you open to a quick discussion on this?",
-   "from": "[name] (my apps' contact form, anonymised)"
-  },
-  {
-   "id": "inbox-2026-10-03-29",
-   "subject": "Someone has a question about Upright Net Terms",
-   "date": "",
-   "body": "Hi,\nI found your Shopify app and wanted to get in touch.\nAre you currently looking for stores to test the app?\nI can arrange app installation and basic feature testing through Shopify stores.\nI can also share feedback based on the testing experience.\nIf you need installation or review support, please let me know.\nI'd be happy to share the details.\nRegards,\n[name]\nWhatsApp: [phone]",
-   "from": "[name] (my apps' contact form, anonymised)"
-  },
-  {
-   "id": "forum-56060-5",
-   "subject": "Question from the Shopify Community",
-   "date": "",
-   "body": "i can do in the app automatic discount like shopify?\n\nwithout any bundle showing and things like that only in the cart i will show the lower price product as a gift ?",
-   "from": "A merchant (public forum post)"
-  },
-  {
-   "id": "inbox-2026-10-11-0",
-   "subject": "Someone has a question about Upright Net Terms",
-   "date": "",
-   "body": "Hello, my name is [name]. I specialize in e-commerce and have hands-on experience managing over five active Shopify stores.\nI work with Shopify app developers to help them improve their apps by installing them, exploring their features, testing their functionality, and providing clear, constructive feedback based on my experience. Where appropriate, I can also share an honest review of the app.\nMy standard rate is $30 per Shopify store, which includes app installation, testing, feedback, and a review where applicable. However, I'm open to discussing your budget and finding a rate that works for both of us.\nIf you're looking for someone reliable to test your Shopify app and share useful insights, I'd be happy to collaborate with you.\nThank you for your time. I look forward to working with you!",
-   "from": "[name] (my apps' contact form, anonymised)"
-  },
-  {
-   "id": "forum-250373-1",
-   "subject": "Question from the Shopify Community",
-   "date": "",
-   "body": "I have added 2 apps to my store, CJ Drop Shipping and Dser to dropship for Aliexpress. Am I able to use both apps to import items for my website or is better to use 1 app?",
-   "from": "A merchant (public forum post)"
-  },
-  {
    "id": "inbox-2026-08-29-10",
    "subject": "Someone has a question about Upright Net Terms",
    "date": "",
    "body": "Hi [name], are you the right person in charge of this brand...?\n\ni checked out your Store and love the products but I noticed your listings are mostly images right now.Here's the thing: shoppers today scroll past photos, but they stop for video especially UGC-style content that feels like a real recommendation, not an ad. Stores that add video to their product pages and ads typically see:- Higher add-to-cart and conversion rates (video reduces buyer uncertainty)- Lower cost-per-result on Meta/TikTok/Google ads (platforms reward video with more reach)- Content that works everywhere ads, product pages, email, organic social from one productionAt [name] Agency, we specialize in AI-generated UGC videos, product videos, and promotional ads for ecommerce brands, built fast (days, not weeks) and at a fraction of the cost of hiring real creators or shipping products to influencers.I'd like to prove it rather than just tell you. I'll create one free trial video for Product no cost, no commitment. If you like what you see and it moves the needle, we talk next steps. If not, you keep the video anyway.Would you be open to that? Just reply with the product you'd like us to feature",
-   "from": "[name] (my apps' contact form, anonymised)"
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
+  },
+  {
+   "id": "fresh-680564",
+   "from": "A merchant (public forum post, not in the training set)",
+   "subject": "Question from the Shopify Community",
+   "date": "",
+   "body": "Can you suggest free and paid Shopify apps for showing only the images belonging to the selected variant?"
   },
   {
    "id": "inbox-2026-09-18-15",
    "subject": "Someone has a question about Upright Net Terms",
    "date": "",
    "body": "Hi, Your Shopify app caught my attention, and I believe my Discord community would find it genuinely useful.\nThe community is focused on Shopify, e-commerce, store growth, and useful tools for merchants. You can promote your app there and get it in front of potential users.\nShould this interest you, I'm happy to share the pricing for a promo post inside the community.\nIs that something you'd be interested in?\nYou can see the community for yourself here: [link]",
-   "from": "[name] (my apps' contact form, anonymised)"
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
   },
   {
-   "id": "forum-607695-8",
+   "id": "inbox-2026-09-14-3",
+   "subject": "Someone has a question about Upright Net Terms",
+   "date": "",
+   "body": "Hi,\nI came across your Shopify app and noticed it's still early in its launch phase and building its initial merchant traction.\nI'm a Shopify Partner and e-commerce specialist. I manage a network of active Shopify stores and work directly with live store owners. I can connect your app with real merchants who will install, test, and use it in active Shopify environments, providing direct user feedback and genuine merchant reviews based on their experience.\nRunning Shopify App Store ads can burn budget fast and without solid social proof, ad traffic rarely converts because merchants hesitate to install unproven apps. Building organic merchant usage and verified reviews gives you a far higher ROI than paid ads: it boosts your long-term search ranking, drives sustainable organic installs, and helps you qualify for the Built for Shopify badge.\nTo be completely clear, this is 100% genuine store activity no bots, fake accounts, or fabricated reviews.\nIf you're looking to build sustainable traction and push toward that Built for Shopify status without wasting money on ads, I can share how we structure the process and pricing.\nAre you open to a quick discussion on this?",
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
+  },
+  {
+   "id": "fresh-554954",
+   "from": "A merchant (public forum post, not in the training set)",
    "subject": "Question from the Shopify Community",
    "date": "",
-   "body": "We are evaluating the same app and like it so far. However it modifies orders after creation by adding bundle child components, prices and discounts, which affects our downstream order integrations.",
-   "from": "A merchant (public forum post)"
+   "body": "My website pennant-flags.com sell customized flags, I want change to Shopify, is there any free Shopify app allow customer upload their LOGO pictures when they place order."
+  },
+  {
+   "id": "fresh-628163",
+   "from": "A merchant (public forum post, not in the training set)",
+   "subject": "Question from the Shopify Community",
+   "date": "",
+   "body": "Clyde just pulled our store from their system for raising a support ticket saying it’s no longer “compatible”. Their support has been awful to work with since day 1 and I’m absolutely blown away by the unprofessionalism and lack of support. If anyone has an alternative, please let us know."
+  },
+  {
+   "id": "inbox-2026-09-16-19",
+   "subject": "Someone has a question about Upright Net Terms",
+   "date": "",
+   "body": "Hey, quick one for you. I found your Shopify app the other day and figured it would fit my Discord community really well.\nThe community revolves around Shopify, e-commerce, growing revenue, and practical merchant tools, so your app would be shown to an audience that fits it well.\nInterested? We can sort out the pricing for a promotional post in the community.\nAny interest on your side?\nCommunity link, in case you want to browse: [link]",
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
+  },
+  {
+   "id": "fresh-689570",
+   "from": "A merchant (public forum post, not in the training set)",
+   "subject": "Question from the Shopify Community",
+   "date": "",
+   "body": "im looking at a free gift offer for orders over a certain amount. The discount part seems simple enough, but how does the gift get into the basket? I dont want customers hunting for it and adding it themselves. Also, if they remove something and go below the minimum, would the gift come back out? Has anyone found a setup that does both?"
+  },
+  {
+   "id": "inbox-2026-10-03-29",
+   "subject": "Someone has a question about Upright Net Terms",
+   "date": "",
+   "body": "Hi,\nI found your Shopify app and wanted to get in touch.\nAre you currently looking for stores to test the app?\nI can arrange app installation and basic feature testing through Shopify stores.\nI can also share feedback based on the testing experience.\nIf you need installation or review support, please let me know.\nI'd be happy to share the details.\nRegards,\n[name]\nWhatsApp: [phone]",
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
+  },
+  {
+   "id": "inbox-2026-09-01-7",
+   "subject": "Someone has a question about Upright Net Terms",
+   "date": "",
+   "body": "Hi,\nMy name is [name]. I work with Shopify store owners and app developers to improve app visibility, genuine reviews, and installations. I came across your store while researching Shopify merchants and thought there could be an opportunity to help you reach more relevant users.\nIf you're currently looking for support with app reviews, installations, engagement, or visibility, I'd be happy to share how I can help and explain how the process works.\nWould you be interested in learning more? Simply reply \"Interested,\" and I'll send you the details so we can discuss the next step.",
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
+  },
+  {
+   "id": "fresh-109202",
+   "from": "A merchant (public forum post, not in the training set)",
+   "subject": "Question from the Shopify Community",
+   "date": "",
+   "body": "Hi all, I am trying to find an app that allows me to let my customers make a wish list and also share it with their followers, so there followers can go on and buy them stuff"
+  },
+  {
+   "id": "inbox-2026-10-11-0",
+   "subject": "Someone has a question about Upright Net Terms",
+   "date": "",
+   "body": "Hello, my name is [name]. I specialize in e-commerce and have hands-on experience managing over five active Shopify stores.\nI work with Shopify app developers to help them improve their apps by installing them, exploring their features, testing their functionality, and providing clear, constructive feedback based on my experience. Where appropriate, I can also share an honest review of the app.\nMy standard rate is $30 per Shopify store, which includes app installation, testing, feedback, and a review where applicable. However, I'm open to discussing your budget and finding a rate that works for both of us.\nIf you're looking for someone reliable to test your Shopify app and share useful insights, I'd be happy to collaborate with you.\nThank you for your time. I look forward to working with you!",
+   "from": "[name] (my apps' contact form, anonymised; in the training set)"
   }
  ]
 }
