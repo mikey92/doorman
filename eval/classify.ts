@@ -6,7 +6,7 @@
 //   node eval/classify.ts cv      5-fold cross-validation over forum topics → eval/CLASSIFIER.md
 //   node eval/classify.ts fit     train on every forum post → public/classifier.json, then test on the inbox
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { EMBEDDER, makeEmbedder, PREFIX } from "../src/embed.ts";
 import { predict, train, type Classifier } from "../src/linear.ts";
 import { sentences } from "../src/triage.ts";
@@ -35,6 +35,7 @@ async function embed() {
     out[m.id] = { message: Array.from(mv, (x) => +x.toFixed(5)), sentences: ss.map((text, k) => ({ text, v: Array.from(sv[k], (x) => +x.toFixed(5)) })) };
     if (i % 20 === 0) console.log(`${i + 1}/${all.length} (${Math.round((Date.now() - started) / 1000)} s)`);
   }
+  mkdirSync(new URL("./", CACHE), { recursive: true });
   writeFileSync(CACHE, JSON.stringify(out));
   console.log(`embedded ${all.length} messages in ${Math.round((Date.now() - started) / 1000)} s`);
 }
