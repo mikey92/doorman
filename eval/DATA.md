@@ -23,4 +23,6 @@ One thing worth knowing: the forum's topics are often about choosing an app, so 
 
 Every pitch that reached my three Shopify apps' listing contact form (Upright Cleaner, Upright Net Terms, Upright Upsell) or my email about them between 29 August and 13 October 2026: 35 messages. Three were a single image with no text; of the other 32, 23 are left once identical copies are removed. Names, links and phone numbers are replaced with `[name]`, `[link]` and `[phone]`.
 
-Not one message in that time was from a customer. That is why Doorman exists, and it is also why this set has no customers in it. The classifier is **never trained on it**: it is trained on the forum posts and tested here, on messages written by different people for a different channel.
+Not one message in that time was from a customer. That is why Doorman exists, and it is also why this set has no customers in it.
+
+`eval/CLASSIFIER.md` scores this set twice: with a model trained on the forum alone, and one sender at a time with a model trained on the forum and every other sender. The shipped classifier is trained on both sets.
