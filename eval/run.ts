@@ -1,6 +1,6 @@
 // How often does Doorman fold away a real customer, and how many pitches does it catch?
 //
-//   node eval/run.ts run <model> [tag]   rate every message in eval/messages.jsonl, on the CPU
+//   node eval/run.ts run <model> [tag] [dev|test]   rate every message (or one split) in eval/messages.jsonl, on the CPU
 //   node eval/run.ts report              eval/EVAL.md from every run in eval/results
 //
 // Messages go through the same triage() the page uses. Only the runtime differs: here it is
@@ -16,6 +16,8 @@ export interface Labeled {
   label: "customer" | "pitch";
   /** Where it came from: see eval/DATA.md. */
   source: string;
+  /** "dev" messages were used to choose the prompt and the bars; "test" ones were not. */
+  split?: "dev" | "test";
   body: string;
 }
 
@@ -28,7 +30,7 @@ export function loadMessages(): Labeled[] {
 
 type Run = Record<string, Triage & { label: Labeled["label"]; source: string; ms: number }>;
 
-async function run(key: ModelKey, tag: string) {
+async function run(key: ModelKey, tag: string, split?: string) {
   const { pipeline } = await import("@huggingface/transformers");
   const started = Date.now();
   const generator = await pipeline("text-generation", MODELS[key].id, { dtype: "q4", device: "cpu" });
@@ -44,7 +46,7 @@ async function run(key: ModelKey, tag: string) {
   } catch {
     /* a new run */
   }
-  const messages = loadMessages();
+  const messages = loadMessages().filter((m) => !split || m.split === split);
   for (const [i, m] of messages.entries()) {
     if (out[m.id]) continue;
     const t0 = Date.now();
@@ -125,7 +127,7 @@ function report() {
   console.log(md);
 }
 
-const [cmd, a, b] = process.argv.slice(2);
-if (cmd === "run" && a && a in MODELS) await run(a as ModelKey, b ?? "");
+const [cmd, a, b, c] = process.argv.slice(2);
+if (cmd === "run" && a && a in MODELS) await run(a as ModelKey, b ?? "", c);
 else if (cmd === "report") report();
-else console.log("usage: node eval/run.ts run <gemma-3-1b|gemma-3-270m> [tag] | report");
+else console.log("usage: node eval/run.ts run <gemma-3-1b|gemma-3-270m> [tag] [dev|test] | report");
