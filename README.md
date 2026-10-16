@@ -2,7 +2,7 @@
 
 **Your app's or shop's contact form, sorted: customers first, sales pitches folded away. It runs in your browser; nothing you load leaves the page.**
 
-Live: **https://doorman.mikey9220.workers.dev** · Evaluation: [eval/CLASSIFIER.md](eval/CLASSIFIER.md) · Data: [eval/DATA.md](eval/DATA.md)
+Live: **https://doorman.mikey9220.workers.dev** · Write-up: [on DEV](https://dev.to/mike_kim_692aa79c288bfed8/doorman-my-apps-contact-form-got-23-messages-in-six-weeks-and-all-23-were-pitches-h7c) · Evaluation: [eval/CLASSIFIER.md](eval/CLASSIFIER.md) · Data: [eval/DATA.md](eval/DATA.md)
 
 In six weeks my three Shopify apps' contact form, and the email behind it, got 23 different messages from 21 senders. All 23 were people selling me something: installs, reviews, a promo post in their Discord. Not one was a customer. The day one is, I don't want it buried under the next "I came across your app and was really impressed".
 
