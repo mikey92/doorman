@@ -182,6 +182,12 @@ function highlight(body: string, quote: string): DocumentFragment {
   return frag;
 }
 
+/** The first couple of lines, so a card can be read without opening it. */
+function preview(body: string): string {
+  const flat = body.replace(/\s+/g, " ").trim();
+  return flat.length > 220 ? `${flat.slice(0, 220).replace(/\s+\S*$/, "")}…` : flat;
+}
+
 function card(m: Message, t: Triage | undefined): HTMLLIElement {
   const li = document.createElement("li");
   li.className = "card";
@@ -192,11 +198,26 @@ function card(m: Message, t: Triage | undefined): HTMLLIElement {
   const subject = document.createElement("span");
   subject.textContent = m.subject;
   head.append(who, subject);
+  if (t) {
+    const p = document.createElement("span");
+    p.className = "p";
+    p.textContent = `P(pitch) ${t.p.toFixed(2)}`;
+    p.title = "How likely the classifier thinks this message is a sales pitch";
+    head.append(p);
+  }
   li.append(head);
   if (t?.quote) {
     const q = document.createElement("blockquote");
-    q.textContent = t.quote;
+    const label = document.createElement("span");
+    label.className = "q-label";
+    label.textContent = t.verdict === "pitch" ? "Gave it away" : "Most pitch-like sentence";
+    q.append(label, document.createElement("br"), t.quote);
     li.append(q);
+  } else {
+    const p = document.createElement("p");
+    p.className = "preview";
+    p.textContent = preview(m.body);
+    li.append(p);
   }
   const details = document.createElement("details");
   const summary = document.createElement("summary");
@@ -223,4 +244,5 @@ function render() {
   $("n-customer").textContent = String(counts.customer);
   $("n-unsure").textContent = String(counts.unsure);
   $("n-pitch").textContent = String(counts.pitch);
+  $("unsure-group").hidden = counts.unsure === 0;
 }
