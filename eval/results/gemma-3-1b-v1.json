@@ -1,0 +1,1474 @@
+{
+ "forum-297999-1": {
+  "verdict": "pitch",
+  "quote": "The goal is to manage all product data and orders in one store, using the destination stores solely as “storefronts”.",
+  "score": 9.28866958618164,
+  "rated": [
+   {
+    "sentence": "I have a project involving one source store and multiple destination stores.",
+    "score": 7.623554229736328
+   },
+   {
+    "sentence": "The ideal setup would include:",
+    "score": 7.718505859375
+   },
+   {
+    "sentence": "A one-way sync for product data (including meta fields, selected by tags) and inventory (across multiple locations) from the source store to the destination stores.",
+    "score": 8.329421997070312
+   },
+   {
+    "sentence": "A two-way sync for orders (including shipping details), with orders tagged with the name of the destination store.",
+    "score": 9.128654479980469
+   },
+   {
+    "sentence": "The goal is to manage all product data and orders in one store, using the destination stores solely as “storefronts”.",
+    "score": 9.28866958618164
+   },
+   {
+    "sentence": "I have tested a few apps and reviewed the documentation for others I’ve found, but I haven’t found any app that meets these needs.",
+    "score": 0.06847381591796875
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 13944
+ },
+ "forum-399943-1": {
+  "verdict": "unsure",
+  "quote": "i have import all my listing from etsy to shopify using app and its done very good, and now how can i update the new listing that i post on etsy to shopify ?",
+  "score": 6.6689300537109375,
+  "rated": [
+   {
+    "sentence": "nice to be here",
+    "score": 0.5004997253417969
+   },
+   {
+    "sentence": "i have import all my listing from etsy to shopify using app and its done very good, and now how can i update the new listing that i post on etsy to shopify ?",
+    "score": 6.6689300537109375
+   },
+   {
+    "sentence": "should i use the app again or i do manual?",
+    "score": 0.709930419921875
+   },
+   {
+    "sentence": "i am afraid if i do it with app it will double post",
+    "score": -1.63055419921875
+   },
+   {
+    "sentence": "wait for your respond",
+    "score": -4.1127166748046875
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 10090
+ },
+ "forum-694117-1": {
+  "verdict": "unsure",
+  "quote": "can a new token be generated while the old one still works, then revoke the old one?",
+  "score": 6.868743896484375,
+  "rated": [
+   {
+    "sentence": "I have a custom app (legacy, created from the Shopify admin under Apps → Develop apps) installed on my store.",
+    "score": 5.415142059326172
+   },
+   {
+    "sentence": "I use its Admin API access token to call Shopify APIs from my own backend, and everything works fine.",
+    "score": 5.015880584716797
+   },
+   {
+    "sentence": "As a security hygiene measure, I’d like to rotate this app’s credentials (API key / API secret / Admin API access token) periodically.",
+    "score": 5.501914978027344
+   },
+   {
+    "sentence": "Is there any API (Admin REST/GraphQL, Partner API, or anything else) that lets me rotate or regenerate a custom app’s credentials programmatically?",
+    "score": 5.895572662353516
+   },
+   {
+    "sentence": "Or is this only possible manually from the admin UI?",
+    "score": 2.962127685546875
+   },
+   {
+    "sentence": "If it’s manual-only, what’s the recommended workflow to rotate the token without downtime — e.g.",
+    "score": 4.916263580322266
+   },
+   {
+    "sentence": "can a new token be generated while the old one still works, then revoke the old one?",
+    "score": 6.868743896484375
+   },
+   {
+    "sentence": "Does rotating the API secret also invalidate the existing Admin API access token, or are these independent?",
+    "score": 4.171421051025391
+   },
+   {
+    "sentence": "App type: custom app (legacy), not a public/Partner app",
+    "score": 5.390377044677734
+   },
+   {
+    "sentence": "API version in use: [your version, e.g.",
+    "score": 6.252269744873047
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 27911
+ },
+ "forum-275162-3": {
+  "verdict": "unsure",
+  "quote": "Are there any Loyalty programs that will integrate between the two?",
+  "score": 7.8575286865234375,
+  "rated": [
+   {
+    "sentence": "I have the same setup (Lightspeed Retail R for POS and Shopify Advanced for eComm).",
+    "score": 7.421409606933594
+   },
+   {
+    "sentence": "Are there any Loyalty programs that will integrate between the two?",
+    "score": 7.8575286865234375
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 3877
+ },
+ "forum-56060-12": {
+  "verdict": "customer",
+  "quote": "",
+  "score": -2.322052001953125,
+  "rated": [
+   {
+    "sentence": "they do bundles not automatic discounts",
+    "score": -2.322052001953125
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 1884
+ },
+ "forum-303723-1": {
+  "verdict": "unsure",
+  "quote": "Etsy Integration and Quick Sync",
+  "score": 6.777656555175781,
+  "rated": [
+   {
+    "sentence": "I see there are a couple different apps for Esty integration.",
+    "score": 2.9779586791992188
+   },
+   {
+    "sentence": "What is the difference between them (what do you get / not get?):",
+    "score": 2.8780899047851562
+   },
+   {
+    "sentence": "Etsy Integration and Quick Sync",
+    "score": 6.777656555175781
+   },
+   {
+    "sentence": "Etsy Integration and Sync - DPL",
+    "score": 4.617076873779297
+   },
+   {
+    "sentence": "Etsy Sync Integration - shopUpz",
+    "score": 5.128269195556641
+   },
+   {
+    "sentence": "Which is the better app?",
+    "score": 2.719127655029297
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 13164
+ },
+ "forum-628728-1": {
+  "verdict": "unsure",
+  "quote": "Is there another simple bundle app that has this feature?",
+  "score": 6.938026428222656,
+  "rated": [
+   {
+    "sentence": "I’m using the Shopify bundle app which is great.",
+    "score": 3.1100616455078125
+   },
+   {
+    "sentence": "But it doesn’t do dynamic pricing which is giving us a headache!",
+    "score": 4.261798858642578
+   },
+   {
+    "sentence": "Is there another simple bundle app that has this feature?",
+    "score": 6.938026428222656
+   },
+   {
+    "sentence": "Don’t want anything fancy.",
+    "score": 4.714378356933594
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 8221
+ },
+ "forum-230568-1": {
+  "verdict": "unsure",
+  "quote": "Is there an app that I can use to pull items from my catalogue in Shopify to create a nicely finished and printable catalogue of items we can mail to our customers?",
+  "score": 8.73959732055664,
+  "rated": [
+   {
+    "sentence": "Is there an app that I can use to pull items from my catalogue in Shopify to create a nicely finished and printable catalogue of items we can mail to our customers?",
+    "score": 8.73959732055664
+   },
+   {
+    "sentence": "Have it printed from vistaprint or of the like?",
+    "score": 8.448596954345703
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 4365
+ },
+ "forum-208039-1": {
+  "verdict": "unsure",
+  "quote": "And if there are multiple to choose from, please send me a few of these.",
+  "score": 8.0947265625,
+  "rated": [
+   {
+    "sentence": "Hi there, I know this has been asked before but I would like to know if there is a Shopify app that will show multiple images per variant?",
+    "score": 6.736473083496094
+   },
+   {
+    "sentence": "And if there are multiple to choose from, please send me a few of these.",
+    "score": 8.0947265625
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 3850
+ },
+ "forum-385346-2": {
+  "verdict": "unsure",
+  "quote": "I’ve been doing a bit more research and think I’m looking for an “Interactive Sales Funnel”",
+  "score": 7.066001892089844,
+  "rated": [
+   {
+    "sentence": "I’ve been doing a bit more research and think I’m looking for an “Interactive Sales Funnel”",
+    "score": 7.066001892089844
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 1861
+ },
+ "forum-409978-1": {
+  "verdict": "pitch",
+  "quote": "– Alerts via email, ideally with an attached CSV or Excel report.",
+  "score": 11.615764617919922,
+  "rated": [
+   {
+    "sentence": "Hey Shopify Community!",
+    "score": 6.724941253662109
+   },
+   {
+    "sentence": "We’re looking for a replacement for MerchBees, which recently changed how it handles low-stock alerts.",
+    "score": 8.591194152832031
+   },
+   {
+    "sentence": "Our business needs very specific features to help us manage inventory cleanly and avoid stockouts without overstocking.",
+    "score": 9.307697296142578
+   },
+   {
+    "sentence": "Here’s what we’re looking for:",
+    "score": 9.775924682617188
+   },
+   {
+    "sentence": "– Set low-stock thresholds at the variant product level.",
+    "score": 11.144420623779297
+   },
+   {
+    "sentence": "– No tagging required.",
+    "score": 8.79397964477539
+   },
+   {
+    "sentence": "We need to pick specific variants/products for tracking without adding or managing tags.",
+    "score": 10.897811889648438
+   },
+   {
+    "sentence": "– Alerts via email, ideally with an attached CSV or Excel report.",
+    "score": 11.615764617919922
+   },
+   {
+    "sentence": "– Dashboard view showing red/yellow/green status for inventory health at a glance.",
+    "score": 9.093822479248047
+   },
+   {
+    "sentence": "– Ability to exclude certain products by variant from low-stock alerts.",
+    "score": 9.459716796875
+   },
+   {
+    "sentence": "– Affordable—we’re a small team, so cost is a factor.",
+    "score": 5.852474212646484
+   },
+   {
+    "sentence": "– Bonus: If there’s forecasting (in the same app or a separate one), that’s a big plus—especially if it uses past sales to help us plan production intelligently.",
+    "score": 8.353771209716797
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 35986
+ },
+ "forum-56060-1": {
+  "verdict": "pitch",
+  "quote": "just an app that do like the automatic discount of shopify",
+  "score": 11.479190826416016,
+  "rated": [
+   {
+    "sentence": "hi i did an automatic discount in shopify but i can do only one",
+    "score": 5.188648223876953
+   },
+   {
+    "sentence": "i need an app that can make an automatic discount that if someone buy 3 products from the same collection he will get one free but it will be automatically",
+    "score": 10.163871765136719
+   },
+   {
+    "sentence": "from the same collection that he can just add 4 products to his cart and then he will see that one is free",
+    "score": 5.812107086181641
+   },
+   {
+    "sentence": "no need a bundle app or something like that",
+    "score": 4.075527191162109
+   },
+   {
+    "sentence": "just an app that do like the automatic discount of shopify",
+    "score": 11.479190826416016
+   },
+   {
+    "sentence": "thanks for the help",
+    "score": 9.400226593017578
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 14169
+ },
+ "forum-699079-4": {
+  "verdict": "unsure",
+  "quote": "Yes I figured theirs was custom coded and I dont necessarily need that as I just had that done and the guy seemed to mess it all up so on my backend of shopify it is messed up and images do not show up on our orders etc.",
+  "score": 8.517742156982422,
+  "rated": [
+   {
+    "sentence": "Thanks for reaching out.",
+    "score": 7.7406768798828125
+   },
+   {
+    "sentence": "Yes I figured theirs was custom coded and I dont necessarily need that as I just had that done and the guy seemed to mess it all up so on my backend of shopify it is messed up and images do not show up on our orders etc.",
+    "score": 8.517742156982422
+   },
+   {
+    "sentence": "Below is what I had made, it is done in categories at the top which I thought I liked but feel like customers do not know to click on each category.",
+    "score": 5.383487701416016
+   },
+   {
+    "sentence": "Also how it shows the price above the category and then when you select the bike model it says +220 or whatever the price is which seems misleading.",
+    "score": 6.806938171386719
+   },
+   {
+    "sentence": "Thanks for reaching out.",
+    "score": 7.7406768798828125
+   },
+   {
+    "sentence": "Yes I figured theirs was custom coded and I dont necessarily need that as I just had that done and the guy seemed to mess it all up so on my backend of shopify it is messed up and images do not show up on our orders etc.",
+    "score": 8.517742156982422
+   },
+   {
+    "sentence": "Below is what I had made, it is done in categories at the top which I thought I liked but feel like customers do not know to click on each category.",
+    "score": 5.383487701416016
+   },
+   {
+    "sentence": "Also how it shows the price above the category and then when you select the bike model it says +220 or whatever the price is which seems misleading.",
+    "score": 6.806938171386719
+   },
+   {
+    "sentence": "Supertech Black Graphic Kit for Honda's",
+    "score": 5.5974273681640625
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 36792
+ },
+ "forum-646221-1": {
+  "verdict": "unsure",
+  "quote": "Reports of my inventory?",
+  "score": 6.411708831787109,
+  "rated": [
+   {
+    "sentence": "Any suggestions for a replacement for stocky that is not a large monthly charge.",
+    "score": 3.837677001953125
+   },
+   {
+    "sentence": "I need for creating purchase orders and seeing what I need to order by being able to type in something like a size.",
+    "score": 3.4811973571777344
+   },
+   {
+    "sentence": "Stocktakes at year end.",
+    "score": 4.389392852783203
+   },
+   {
+    "sentence": "Reports of my inventory?",
+    "score": 6.411708831787109
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 14494
+ },
+ "forum-250373-4": {
+  "verdict": "unsure",
+  "quote": "Dan, do you mean you have to manually fulfill the orders from each supplier (in my case CJ and AliExpress)?",
+  "score": 7.1847381591796875,
+  "rated": [
+   {
+    "sentence": "Dan, do you mean you have to manually fulfill the orders from each supplier (in my case CJ and AliExpress)?",
+    "score": 7.1847381591796875
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 2860
+ },
+ "forum-417493-1": {
+  "verdict": "pitch",
+  "quote": "The app must require a code for the free gift.",
+  "score": 9.341133117675781,
+  "rated": [
+   {
+    "sentence": "Hello Shopify Community!",
+    "score": 2.0949440002441406
+   },
+   {
+    "sentence": "I am trying to offer a free gift to our customers that filled out a survey for us, the caveat is we do not have their email addresses to send a link.",
+    "score": 4.774341583251953
+   },
+   {
+    "sentence": "We are handwriting and mailing thank yous with this free gift but would like for them to choose.",
+    "score": 4.585968017578125
+   },
+   {
+    "sentence": "I am having a hard time finding an app that allows:",
+    "score": 1.5518302917480469
+   },
+   {
+    "sentence": "me to pick a gift with purchase from a specific collection of items",
+    "score": 6.727191925048828
+   },
+   {
+    "sentence": "requires a code given to these specific customers",
+    "score": 8.089096069335938
+   },
+   {
+    "sentence": "The app must require a code for the free gift.",
+    "score": 9.341133117675781
+   },
+   {
+    "sentence": "I’ve tried Easy Gift, BOGO, Free Gift, Koala Upsells, and GiftBox.",
+    "score": 2.873523712158203
+   },
+   {
+    "sentence": "There has got to be a way to do this!",
+    "score": 6.978076934814453
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 32626
+ },
+ "forum-39307-11": {
+  "verdict": "customer",
+  "quote": "",
+  "score": 0.8805198669433594,
+  "rated": [
+   {
+    "sentence": "Yes, that is one way, of many.",
+    "score": 0.8805198669433594
+   },
+   {
+    "sentence": "However, that is an additional step every time you run a filter or search.",
+    "score": -0.8193511962890625
+   },
+   {
+    "sentence": "Simply NEVER showing items that I don’t want to see (because I’ve archived them) would be a much better scenario",
+    "score": 0.713134765625
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 9257
+ },
+ "forum-672561-1": {
+  "verdict": "customer",
+  "quote": "",
+  "score": 3.607715606689453,
+  "rated": [
+   {
+    "sentence": "I currently use the basic bundles app made by shopify.",
+    "score": 0.11203384399414062
+   },
+   {
+    "sentence": "I have two main concerns with it.",
+    "score": 3.0951919555664062
+   },
+   {
+    "sentence": "First, it seems to track separate inventory from my main inventory.",
+    "score": 0.648712158203125
+   },
+   {
+    "sentence": "Second, it does not automatically apply the bundle in cart.",
+    "score": 3.0910720825195312
+   },
+   {
+    "sentence": "You have to shop the specific bundle on the website.",
+    "score": -0.25722503662109375
+   },
+   {
+    "sentence": "On top of that, you can’t edit an order to fix it.",
+    "score": 3.0277671813964844
+   },
+   {
+    "sentence": "Any recommendations for another bundling app that will handle those issues and maybe has some other options I haven’t even thought of yet?",
+    "score": 3.607715606689453
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 24442
+ },
+ "forum-697474-1": {
+  "verdict": "unsure",
+  "quote": "I have developed a Shopify app and am preparing to submit it for review.",
+  "score": 8.323902130126953,
+  "rated": [
+   {
+    "sentence": "I have developed a Shopify app and am preparing to submit it for review.",
+    "score": 8.323902130126953
+   },
+   {
+    "sentence": "Our app is a standalone platform that supports Shopify, other e-commerce platforms, and various third-party integrations.",
+    "score": 7.661716461181641
+   },
+   {
+    "sentence": "I noticed that Shopify doesn’t allow apps to ask merchants to manually enter their Shopify store domain to connect (App Store requirements)",
+    "score": 4.593059539794922
+   },
+   {
+    "sentence": "Additionally, when merchants install our app directly from the Shopify App Store, we first ask them to create an account on our platform, after which we automatically connect their Shopify store.",
+    "score": 6.989433288574219
+   },
+   {
+    "sentence": "Would either of these approaches violate Shopify’s app requirements?",
+    "score": 7.251300811767578
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 17830
+ },
+ "forum-39307-1": {
+  "verdict": "unsure",
+  "quote": "I know that the products are hidden from the sales channels but they should also be hidden from the Shopify admin unless I’m specifically looking for them.",
+  "score": 8.930431365966797,
+  "rated": [
+   {
+    "sentence": "We’re just switched to Shopify POS from Lightspeed Onsite POS and are getting used to all the back end changes that requires.",
+    "score": 6.3425140380859375
+   },
+   {
+    "sentence": "One of the things that’s different is product management and we’re happy to have the new ‘Archived’ status.",
+    "score": 6.788215637207031
+   },
+   {
+    "sentence": "Since we’ve switched we’ve started to use the Archived status for older products that we will (probably) never stock again.",
+    "score": 8.119132995605469
+   },
+   {
+    "sentence": "The popup that appears when you do this is:",
+    "score": 6.185817718505859
+   },
+   {
+    "sentence": "Archiving products will hide them from your sales channels and Shopify admin.",
+    "score": 7.244865417480469
+   },
+   {
+    "sentence": "You’ll find them using the status filter in your product list.",
+    "score": 6.905048370361328
+   },
+   {
+    "sentence": "But the archived products are only filtered out if the search is for ‘Active’ products.",
+    "score": 2.9652061462402344
+   },
+   {
+    "sentence": "Isn’t the point of Archiving products that you don’t want to see them and that they should be hidden from the ‘All’ search by default?",
+    "score": 7.8649444580078125
+   },
+   {
+    "sentence": "At least that was how it worked in our old POS.",
+    "score": 8.581825256347656
+   },
+   {
+    "sentence": "I know that the products are hidden from the sales channels but they should also be hidden from the Shopify admin unless I’m specifically looking for them.",
+    "score": 8.930431365966797
+   },
+   {
+    "sentence": "If anyone else is using the Archived product setting and doesn’t think it should work this way (or likes the way it works right now) please reply and let me know.",
+    "score": 8.295417785644531
+   },
+   {
+    "sentence": "I’d love to hear how others are using the feature.",
+    "score": 7.700531005859375
+   }
+  ],
+  "label": "customer",
+  "source": "forum",
+  "ms": 40837
+ },
+ "forum-318457-13": {
+  "verdict": "pitch",
+  "quote": "Free to get started - Nventory.io Inventory Sync - Real-time multi-channel inventory sync and order management.",
+  "score": 12.515987396240234,
+  "rated": [
+   {
+    "sentence": "Nventory handles exactly this!",
+    "score": 11.285526275634766
+   },
+   {
+    "sentence": "When a bundle sells, it automatically decrements every individual SKU underneath it in real time.",
+    "score": 11.280960083007812
+   },
+   {
+    "sentence": "No manual updates, no new SKUs needed, it just tracks everything across all your bundles simultaneously.",
+    "score": 10.276256561279297
+   },
+   {
+    "sentence": "So if the same skincare product appears in three different bundles, Nventory knows exactly how many you have left across all of them the moment anything sells.",
+    "score": 10.838626861572266
+   },
+   {
+    "sentence": "You can also set low stock alerts so you get notified before you run out which sounds like exactly what you need right now!",
+    "score": 11.724639892578125
+   },
+   {
+    "sentence": "Free to get started - Nventory.io Inventory Sync - Real-time multi-channel inventory sync and order management.",
+    "score": 12.515987396240234
+   },
+   {
+    "sentence": "| Shopify App Store",
+    "score": 11.703689575195312
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 27582
+ },
+ "forum-318457-9": {
+  "verdict": "pitch",
+  "quote": "We can help you to solve this easily.",
+  "score": 12.423511505126953,
+  "rated": [
+   {
+    "sentence": "This is Anubhav.",
+    "score": 4.9957733154296875
+   },
+   {
+    "sentence": "I work for a Shopify App - Prediko.",
+    "score": 9.771732330322266
+   },
+   {
+    "sentence": "We can help you to solve this easily.",
+    "score": 12.423511505126953
+   },
+   {
+    "sentence": "You can do a simple search for our app on the App store.",
+    "score": 9.700489044189453
+   },
+   {
+    "sentence": "Not sure if I am allowed to leave a link on the posts.",
+    "score": -5.156467437744141
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 18876
+ },
+ "forum-346374-10": {
+  "verdict": "pitch",
+  "quote": "It has a Free Gift feature that lets you offer gifts once a cart hits a certain quantity or spend threshold and yes, customers can pick which gift they want from your product list.",
+  "score": 13.336994171142578,
+  "rated": [
+   {
+    "sentence": "Totally get what you mean, setting up a “choose your free gift” flow can be tricky, especially when there are multiple variants involved.",
+    "score": 8.059486389160156
+   },
+   {
+    "sentence": "You might want to check out Pareto: Quantity Breaks & Discounts.",
+    "score": 12.53640365600586
+   },
+   {
+    "sentence": "It has a Free Gift feature that lets you offer gifts once a cart hits a certain quantity or spend threshold and yes, customers can pick which gift they want from your product list.",
+    "score": 13.336994171142578
+   },
+   {
+    "sentence": "You can even link it to a specific page so they browse and choose the item they like best (including different sizes or variants).",
+    "score": 13.009712219238281
+   },
+   {
+    "sentence": "It’s pretty easy to set up, and there’s a free plan to test it out  might save you a few headaches",
+    "score": 10.959426879882812
+   },
+   {
+    "sentence": "Hope that helps, Andy!",
+    "score": 13.1375732421875
+   },
+   {
+    "sentence": "— Lily from Omega",
+    "score": 10.419525146484375
+   },
+   {
+    "sentence": "Screenshot 2025-10-22 at 10.45.241038×790 287 KB",
+    "score": 7.0478973388671875
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 37207
+ },
+ "forum-636839-14": {
+  "verdict": "pitch",
+  "quote": "You can see examples in our demo store!",
+  "score": 11.492935180664062,
+  "rated": [
+   {
+    "sentence": "We’ve got an app called Options Price Calculator ( Options Price Calculator - Unlimited product options with formula-based dynamic pricing | Shopify App Store ) that would be a great fit to solve this.",
+    "score": 9.613636016845703
+   },
+   {
+    "sentence": "You can put those bedding choices and a size for each on a single product page, update the total live as they toggle items, and skip an extra checkbox per product.",
+    "score": 11.385337829589844
+   },
+   {
+    "sentence": "You can see examples in our demo store!",
+    "score": 11.492935180664062
+   },
+   {
+    "sentence": "Let us know if you need any help.",
+    "score": 9.985851287841797
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 16202
+ },
+ "forum-264056-5": {
+  "verdict": "pitch",
+  "quote": "Built for Shopify.",
+  "score": 14.860336303710938,
+  "rated": [
+   {
+    "sentence": "Disclosure: I work on Fancy Product Designer (Chamevo).",
+    "score": 12.521587371826172
+   },
+   {
+    "sentence": "FPD lets you set up predefined size options (each with its own price) that customers select from.",
+    "score": 10.125556945800781
+   },
+   {
+    "sentence": "Dynamic pricing adjusts the total based on size + any customization add-ons.",
+    "score": 11.46029281616211
+   },
+   {
+    "sentence": "For tiered quantity pricing, I want to be upfront: FPD handles per-item customization pricing well, but bulk quantity breaks (like “order 100+ for 10% off”) are typically managed through Shopify’s native quantity pricing or a separate app.",
+    "score": 10.505104064941406
+   },
+   {
+    "sentence": "FPD handles the design side, the quantity app handles the volume discounts.",
+    "score": 12.152839660644531
+   },
+   {
+    "sentence": "Fancy Product Designer - Boost margins and sales with an intuitive product...",
+    "score": 10.102214813232422
+   },
+   {
+    "sentence": "Let customers design personalized products with 3D previews and AI image tools.",
+    "score": 10.442764282226562
+   },
+   {
+    "sentence": "Built for Shopify.",
+    "score": 14.860336303710938
+   },
+   {
+    "sentence": "Start free trial.",
+    "score": 13.98843002319336
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 31006
+ },
+ "forum-565798-17": {
+  "verdict": "pitch",
+  "quote": "Do you need variant-level reorder forecasting?",
+  "score": 9.10782241821289,
+  "rated": [
+   {
+    "sentence": "One thing I would separate out before choosing a Stocky replacement is what you actually need Stocky for.",
+    "score": 4.773220062255859
+   },
+   {
+    "sentence": "Some stores mainly need purchase orders and receiving.",
+    "score": 4.602752685546875
+   },
+   {
+    "sentence": "Some need inventory counts and barcode workflows.",
+    "score": 6.403110504150391
+   },
+   {
+    "sentence": "Some need forecasting/replenishment.",
+    "score": 6.970371246337891
+   },
+   {
+    "sentence": "For apparel stores, I think the forecasting part is usually where generic tools get messy, because the real issue is not “the hoodie is low”, it is “Medium / Black is low while other sizes are still fine.”",
+    "score": 2.926715850830078
+   },
+   {
+    "sentence": "So I would make a quick list of:",
+    "score": 6.107753753662109
+   },
+   {
+    "sentence": "Do you need POs/receiving?",
+    "score": 8.537670135498047
+   },
+   {
+    "sentence": "Do you need multi-location transfers?",
+    "score": 7.807430267333984
+   },
+   {
+    "sentence": "Do you need variant-level reorder forecasting?",
+    "score": 9.10782241821289
+   },
+   {
+    "sentence": "Do you need barcode stock counts?",
+    "score": 7.331550598144531
+   },
+   {
+    "sentence": "If variant-level forecasting is the main problem, I built a small Shopify app called Restocked for that exact use case: reorder risk by size/color variant for apparel/accessory stores.",
+    "score": 7.699485778808594
+   },
+   {
+    "sentence": "It is not a full ERP or full Stocky replacement, but it may fit stores that mainly need a clearer reorder list.",
+    "score": 4.7710723876953125
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 35742
+ },
+ "forum-672498-14": {
+  "verdict": "pitch",
+  "quote": "I work on it (mobile WMS, 3D map, pick routing, two-way Shopify sync).",
+  "score": 12.805835723876953,
+  "rated": [
+   {
+    "sentence": "@woysanstore “sync” usually means one of three jobs.",
+    "score": 5.50286865234375
+   },
+   {
+    "sentence": "Multiple Shopify locations: native inventory per location plus transfers.",
+    "score": 7.258762359619141
+   },
+   {
+    "sentence": "No extra app required for that.",
+    "score": 5.376148223876953
+   },
+   {
+    "sentence": "Shopify plus Amazon/eBay/other storefronts: that is a channel sync app.",
+    "score": 6.823638916015625
+   },
+   {
+    "sentence": "If oversells are the issue, look for event-driven updates, not a 15 minute poll.",
+    "score": 7.852222442626953
+   },
+   {
+    "sentence": "A warehouse floor that has to match Shopify: bins, receive, pick.",
+    "score": 5.955959320068359
+   },
+   {
+    "sentence": "That is a WMS, not a sync tool.",
+    "score": 4.043773651123047
+   },
+   {
+    "sentence": "SKUSavvy is #3, not #2.",
+    "score": 5.659694671630859
+   },
+   {
+    "sentence": "I work on it (mobile WMS, 3D map, pick routing, two-way Shopify sync).",
+    "score": 12.805835723876953
+   },
+   {
+    "sentence": "SKUSavvy Mobile WMS - Ship high-volume orders without the ERP bloat | Shopify...",
+    "score": 7.966270446777344
+   },
+   {
+    "sentence": "Get everything you need to organize your warehouse across locations, control inventory and replenishment, optimize pick routing, and fulfill orders faster!",
+    "score": 11.122291564941406
+   },
+   {
+    "sentence": "If your pain is marketplace sync, the channel apps in this thread are the better hunt.",
+    "score": 6.295383453369141
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 33716
+ },
+ "forum-680038-14": {
+  "verdict": "pitch",
+  "quote": "Measure the offer beyond AOV.",
+  "score": 9.746726989746094,
+  "rated": [
+   {
+    "sentence": "When it comes to women’s clothing, I would prioritize placement before apps.",
+    "score": 0.4318389892578125
+   },
+   {
+    "sentence": "Since you are not on Plus, checkout blocks are unavailable.",
+    "score": -4.5255126953125
+   },
+   {
+    "sentence": "The safest place to test a complementary add-on (matching piece, underlayer, care kit) is thank-you / order status, without risking the main purchase.",
+    "score": 3.210460662841797
+   },
+   {
+    "sentence": "On the storefront, keep product-page and cart offers to one or two highly related items.",
+    "score": 0.7897453308105469
+   },
+   {
+    "sentence": "A wall of “you may also like” usually does more harm than good when AOV already varies by month.",
+    "score": -3.5160446166992188
+   },
+   {
+    "sentence": "Measure the offer beyond AOV.",
+    "score": 9.746726989746094
+   },
+   {
+    "sentence": "Track attach rate and revenue per session (or contribution after discounts/shipping) so a louder cart drawer does not look like a win while conversion drops.",
+    "score": 3.902301788330078
+   },
+   {
+    "sentence": "One gap the cart/post-purchase apps do not cover: shoppers who never open the cart, but still want drops, restocks, or a second chance at a complementary offer without another full-screen interrupt.",
+    "score": 6.759899139404297
+   },
+   {
+    "sentence": "A shopper-opened notification feed can sit next to your existing popup and upsell apps — email/SMS as one card that syncs into the ESP you already use, not a second ESP.",
+    "score": 4.604373931884766
+   },
+   {
+    "sentence": "Disclosure: I built Atomato (Atomato Email, SMS & Upsell - Grow email and SMS lists and upsell from a feed...",
+    "score": 4.009929656982422
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 31641
+ },
+ "forum-672498-12": {
+  "verdict": "pitch",
+  "quote": "We built our inventory sync tool specifically to bridge that gap for growing Shopify stores—happy to share details if you want a lightweight alternative!”",
+  "score": 14.082904815673828,
+  "rated": [
+   {
+    "sentence": "“If you want reliable sync without paying enterprise pricing for heavy tools like Linnworks or Skubana, definitely look for solutions focused on event-driven, real-time SKU syncing.",
+    "score": 9.439624786376953
+   },
+   {
+    "sentence": "We built our inventory sync tool specifically to bridge that gap for growing Shopify stores—happy to share details if you want a lightweight alternative!”",
+    "score": 14.082904815673828
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 5046
+ },
+ "forum-628728-15": {
+  "verdict": "pitch",
+  "quote": "It’s free to use with unlimited features from the get go so you can test it with very little risk for as long as needed, and paid plans only start with extra revenue generated, but are priced fairly.",
+  "score": 9.538581848144531,
+  "rated": [
+   {
+    "sentence": "Hi @TVR_UK ,",
+    "score": 8.850288391113281
+   },
+   {
+    "sentence": "I understand there’s plenty of options that have been offered, but perhaps you’d still be interested in giving AS Quantity Break & Upsell App.",
+    "score": 6.835376739501953
+   },
+   {
+    "sentence": "From what you described, it might match your needs, and if something’s not clear or you need help setting up - feel free to drop a message via the in-app live chat.",
+    "score": 8.681682586669922
+   },
+   {
+    "sentence": "It’s free to use with unlimited features from the get go so you can test it with very little risk for as long as needed, and paid plans only start with extra revenue generated, but are priced fairly.",
+    "score": 9.538581848144531
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 10322
+ },
+ "forum-218029-7": {
+  "verdict": "pitch",
+  "quote": "That’s what I built Spinr for ( Spinr - 360° product spins from the photos you already have | Shopify App Store ).",
+  "score": 9.573474884033203,
+  "rated": [
+   {
+    "sentence": "Adding a middle option between the two above: if you don’t have product footage and don’t want a presenter-style AI video, you can turn the product photos you already have into a 360° rotation video.",
+    "score": 6.115875244140625
+   },
+   {
+    "sentence": "That’s what I built Spinr for ( Spinr - 360° product spins from the photos you already have | Shopify App Store ).",
+    "score": 9.573474884033203
+   },
+   {
+    "sentence": "It takes 1–4 photos and makes an MP4 of the product rotating, for Reels or ads, plus a spin shoppers can drag on the product page.",
+    "score": 7.084819793701172
+   },
+   {
+    "sentence": "Worth knowing: angles your photos don’t show are filled in by AI, so it works best with clean shots of a single product, and it’s a product rotation, not a scripted ad.",
+    "score": 7.121227264404297
+   },
+   {
+    "sentence": "Free for 3 products, no card.",
+    "score": 9.50912857055664
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 14541
+ },
+ "forum-48591-6": {
+  "verdict": "pitch",
+  "quote": "Provide recommended items with discounts",
+  "score": 10.750381469726562,
+  "rated": [
+   {
+    "sentence": "You may consider the Recom.ai app that offers a great variety of upselling options.",
+    "score": 5.8152923583984375
+   },
+   {
+    "sentence": "Although it doesn’t show a check box, it provides three handy formats: sliders, static blocks, and popups that can be placed on a product page.",
+    "score": 6.358066558837891
+   },
+   {
+    "sentence": "With the app, you also can:",
+    "score": 9.294685363769531
+   },
+   {
+    "sentence": "Show your product recommendations on any other store page, including collection, shopping cart, checkout, and Thank You pages.",
+    "score": 10.67660140991211
+   },
+   {
+    "sentence": "Choose any specific products for your upselling and cross-selling campaigns.",
+    "score": 9.261096954345703
+   },
+   {
+    "sentence": "Regulate how many items per widget to display.",
+    "score": 9.48019790649414
+   },
+   {
+    "sentence": "Provide recommended items with discounts",
+    "score": 10.750381469726562
+   },
+   {
+    "sentence": "If you need more information, don’t hesitate to contact me!",
+    "score": 8.321731567382812
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 18825
+ },
+ "forum-588814-15": {
+  "verdict": "unsure",
+  "quote": "Would you be interested in seeing what Skubase recommends for your store?",
+  "score": 6.817253112792969,
+  "rated": [
+   {
+    "sentence": "I’d evaluate this as two separate workflows rather than one feature checklist.",
+    "score": 3.062335968017578
+   },
+   {
+    "sentence": "For multi-store and marketplace sync, use a few representative SKUs and test whether an order, refund, cancellation, and manual adjustment update every relevant location quickly enough to prevent oversells.",
+    "score": 2.9310379028320312
+   },
+   {
+    "sentence": "For replenishment, test whether the tool produces a reviewable reorder list from sales, stock on hand, lead times, and safety stock, then lets you turn that list into a PO you can check before exporting.",
+    "score": 4.740039825439453
+   },
+   {
+    "sentence": "That makes it easier to see whether one tool genuinely fits both jobs or whether sync and purchasing need separate tools.",
+    "score": 4.662986755371094
+   },
+   {
+    "sentence": "Skubase promotion: I work with Skubase.",
+    "score": 5.9964599609375
+   },
+   {
+    "sentence": "It supports the planning side with reorder recommendations and supplier purchase orders that can be exported as Excel files.",
+    "score": 6.683231353759766
+   },
+   {
+    "sentence": "It is not presented as a replacement for unverified multi-store or marketplace sync.",
+    "score": -2.3819351196289062
+   },
+   {
+    "sentence": "Skubase is not yet listed in the Shopify App Store.",
+    "score": -7.97039794921875
+   },
+   {
+    "sentence": "Would you be interested in seeing what Skubase recommends for your store?",
+    "score": 6.817253112792969
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 23516
+ },
+ "forum-271100-9": {
+  "verdict": "pitch",
+  "quote": "It also auto-generated FAQs so shoppers can get answers much faster.",
+  "score": 9.126049041748047,
+  "rated": [
+   {
+    "sentence": "If you’re looking something lightweight where shopper can ask questions about the product they are currently viewing, I would recommend looking at Asklo AI.",
+    "score": 6.39300537109375
+   },
+   {
+    "sentence": "It’s very lightweight, but super powerful.",
+    "score": 8.872550964355469
+   },
+   {
+    "sentence": "It answers product questions in a very natural way and it’s multi-lignual.",
+    "score": 8.786247253417969
+   },
+   {
+    "sentence": "It also auto-generated FAQs so shoppers can get answers much faster.",
+    "score": 9.126049041748047
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 8339
+ },
+ "forum-318457-5": {
+  "verdict": "pitch",
+  "quote": "We’re here to help!",
+  "score": 12.791488647460938,
+  "rated": [
+   {
+    "sentence": "We have a great solution that might be just what you’re looking for!",
+    "score": 10.587169647216797
+   },
+   {
+    "sentence": "Our Product bundles app is completely free and lets you create a variety of offers and bundles, including the “grouped offer.” Here are some of its standout features:",
+    "score": 9.669517517089844
+   },
+   {
+    "sentence": "No need to create new product SKUs: You can directly link this offer to any of your existing products to create a grouped bundle.",
+    "score": 9.745685577392578
+   },
+   {
+    "sentence": "Streamlined inventory management: When a bundle is added to the cart, each item is added to the cart as a separate product.",
+    "score": 10.033370971679688
+   },
+   {
+    "sentence": "This ensures that stock levels are automatically updated, keeping all the native features of your store intact.",
+    "score": 11.290828704833984
+   },
+   {
+    "sentence": "Unlimited flexibility: You can add an unlimited number of products to each offer, giving you the freedom to customize bundles as needed.",
+    "score": 9.086559295654297
+   },
+   {
+    "sentence": "Here’s the screenshots to show you how these products appear on the storefront:",
+    "score": 10.240814208984375
+   },
+   {
+    "sentence": "bundle1.png2284×1618 268 KB",
+    "score": 7.364994049072266
+   },
+   {
+    "sentence": "bundle2.png2586×1646 262 KB",
+    "score": 7.754676818847656
+   },
+   {
+    "sentence": "If you have any more questions or need further assistance, please don’t hesitate to reach out to us.",
+    "score": 8.73614501953125
+   },
+   {
+    "sentence": "We’re here to help!",
+    "score": 12.791488647460938
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 32288
+ },
+ "forum-552415-10": {
+  "verdict": "pitch",
+  "quote": "Here is a quick blueprint of how I set up this exact flow for merchants using a custom infrastructure I developed under the inventory-alert-app.online platform, combined with our Done-For-You service at iceeweb.online:",
+  "score": 11.177902221679688,
+  "rated": [
+   {
+    "sentence": "Hi Sarasflowers, greetings to Phuket!",
+    "score": -5.793888092041016
+   },
+   {
+    "sentence": "You are definitely not asking for too much.",
+    "score": 2.5675392150878906
+   },
+   {
+    "sentence": "In fact, this is the exact operational wall that high-growth Shopify stores hit when they scale through messaging channels.",
+    "score": 4.055690765380859
+   },
+   {
+    "sentence": "I built a custom framework that perfectly solves your Scenario #1 (and structures #2) without relying on bloated enterprise software or fragile multi-tier Zapier zaps.",
+    "score": 8.808441162109375
+   },
+   {
+    "sentence": "Here is a quick blueprint of how I set up this exact flow for merchants using a custom infrastructure I developed under the inventory-alert-app.online platform, combined with our Done-For-You service at iceeweb.online:",
+    "score": 11.177902221679688
+   },
+   {
+    "sentence": "Real-Time Order Routing to WhatsApp Group (Scenario #1)",
+    "score": 10.242900848388672
+   },
+   {
+    "sentence": "The biggest issue with standard apps is that they only push notifications to individual numbers, not to coordinate a WhatsApp Group.",
+    "score": 5.03460693359375
+   },
+   {
+    "sentence": "Our inventory-alert-app.online engine bypasses this limitation.",
+    "score": 10.412006378173828
+   },
+   {
+    "sentence": "Asynchronous Webhook Tracking: The moment an order hits your Shopify checkout, the engine captures the payload (recipient name, delivery time, phone number, etc.) instantly.",
+    "score": 8.205718994140625
+   },
+   {
+    "sentence": "Custom Multi-Channel Templates: Inside the manager dashboard, you can build custom alert templates (Threshold, Expire & Order alerts).",
+    "score": 9.369693756103516
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 30119
+ },
+ "forum-385346-6": {
+  "verdict": "pitch",
+  "quote": "Force or restrict specific answers based on what was previously selected",
+  "score": 12.297550201416016,
+  "rated": [
+   {
+    "sentence": "Hi @Ant3000 !",
+    "score": 9.398124694824219
+   },
+   {
+    "sentence": "You’ll be able to achieve exactly what you’re looking for with Kickflip!",
+    "score": 8.098331451416016
+   },
+   {
+    "sentence": "Kickflip is a powerful platform that lets you offer product customization directly on your online store.",
+    "score": 8.326301574707031
+   },
+   {
+    "sentence": "It gives your customers a live preview of what they’re ordering, creating a smooth and interactive experience.",
+    "score": 7.181396484375
+   },
+   {
+    "sentence": "The customization process is step-by-step, with each question guiding the user through the options.",
+    "score": 8.634330749511719
+   },
+   {
+    "sentence": "With the Logic Rules feature, you can control how options are shown based on previous selections.",
+    "score": 8.701534271240234
+   },
+   {
+    "sentence": "For example, you can:",
+    "score": 11.110843658447266
+   },
+   {
+    "sentence": "Show or hide a question depending on earlier answers",
+    "score": 11.249523162841797
+   },
+   {
+    "sentence": "Force or restrict specific answers based on what was previously selected",
+    "score": 12.297550201416016
+   },
+   {
+    "sentence": "You can also decide if you allow your clients to add the product to the cart, or to send a request for a quote.",
+    "score": 6.734035491943359
+   },
+   {
+    "sentence": "The platform is intuitive, easy to use, and makes building your products straightforward.",
+    "score": 11.199005126953125
+   },
+   {
+    "sentence": "I encourage you to give it a try—and if you have any questions, feel free to reach out to the customer service team.",
+    "score": 8.626823425292969
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 34227
+ },
+ "forum-608021-6": {
+  "verdict": "pitch",
+  "quote": "This is the result:",
+  "score": 10.776569366455078,
+  "rated": [
+   {
+    "sentence": "From what I understand, you’d like customers to select a different size for each product within the same bundle directly on the product page, similar to the mockup you shared.",
+    "score": 8.74160385131836
+   },
+   {
+    "sentence": "In that case, you might want to check out Easify Product Options",
+    "score": 9.47500228881836
+   },
+   {
+    "sentence": "I’ve created a similar demo to help you better visualize how it works:",
+    "score": 10.368091583251953
+   },
+   {
+    "sentence": "This is the result:",
+    "score": 10.776569366455078
+   },
+   {
+    "sentence": "image2048×1403 141 KB",
+    "score": 8.053459167480469
+   },
+   {
+    "sentence": "This is the app setting:",
+    "score": 10.276924133300781
+   },
+   {
+    "sentence": "image2048×1071 152 KB",
+    "score": 7.422275543212891
+   },
+   {
+    "sentence": "You simply need to go into the app and use Option Buttons to create separate option blocks for each shirt style such as Classic Fit, Relaxed Fit, Slim Fit, or Oversized Fit.",
+    "score": 9.866558074951172
+   },
+   {
+    "sentence": "Then you can add size options like XS, S, M, and L under each corresponding block.",
+    "score": 10.679756164550781
+   },
+   {
+    "sentence": "This allows customers to choose individual sizes for each product directly within the same product page.",
+    "score": 9.853111267089844
+   },
+   {
+    "sentence": "image2048×1071 209 KB",
+    "score": 7.696876525878906
+   },
+   {
+    "sentence": "The app also supports button/swatches display styles, so the layout looks much cleaner and more intuitive, especially for bundle layouts or fashion products like the one you’re building.",
+    "score": 9.468868255615234
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 34699
+ },
+ "forum-275162-12": {
+  "verdict": "pitch",
+  "quote": "I also set it up for you myself, usually within 24 hours, for free.",
+  "score": 11.503807067871094,
+  "rated": [
+   {
+    "sentence": "Hi @unplugged, @Quoin_Rock and anyone following this thread.",
+    "score": 5.034206390380859
+   },
+   {
+    "sentence": "Full disclosure: I’m the founder of SmileSpeed Loyalty, so I’m biased.",
+    "score": 9.547370910644531
+   },
+   {
+    "sentence": "I built it for exactly this setup (Lightspeed in store, Shopify online).",
+    "score": 9.03238296508789
+   },
+   {
+    "sentence": "Since Marsello has come up here, here’s a fair price comparison from their public pricing page.",
+    "score": 6.877220153808594
+   },
+   {
+    "sentence": "Their loyalty plans start at roughly US$60/month per site, and about US$120/month per site for VIP tiers, points expiry and promotions.",
+    "score": 6.202091217041016
+   },
+   {
+    "sentence": "Each extra location is billed again, and Lightspeed pricing is custom.",
+    "score": 6.418331146240234
+   },
+   {
+    "sentence": "Email and SMS are separate add-ons.",
+    "score": 8.536083221435547
+   },
+   {
+    "sentence": "SmileSpeed is $49/month for one location or $79/month for multiple locations, flat.",
+    "score": 7.5179901123046875
+   },
+   {
+    "sentence": "I also set it up for you myself, usually within 24 hours, for free.",
+    "score": 11.503807067871094
+   },
+   {
+    "sentence": "It syncs with Lightspeed X-Series POS (more series to come soon) and Shopify, so one customer has one points balance in store and online.",
+    "score": 6.191677093505859
+   },
+   {
+    "sentence": "Shopify-only stores work fully too.",
+    "score": 9.390438079833984
+   },
+   {
+    "sentence": "One question before anything else: which Lightspeed product are you on (X-Series, R-Series or K-Series)?",
+    "score": 4.252849578857422
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 36989
+ },
+ "forum-297999-21": {
+  "verdict": "pitch",
+  "quote": "This lets you centralize product data and inventory management in the Source store while using the Destination stores purely as storefronts.",
+  "score": 12.80611801147461,
+  "rated": [
+   {
+    "sentence": "Hello @Kimsu,  For your “one source → multiple destination stores” setup, the miniOrange Inventory Sync app is designed to handle exactly this:",
+    "score": 10.414730072021484
+   },
+   {
+    "sentence": "One-way product & inventory sync from a single Source store to multiple Destination stores",
+    "score": 11.25808334350586
+   },
+   {
+    "sentence": "Real-time, multi-location inventory sync across all stores",
+    "score": 12.377948760986328
+   },
+   {
+    "sentence": "Supports both one-way and two-way inventory sync, depending on how you want to manage stock levels",
+    "score": 11.794670104980469
+   },
+   {
+    "sentence": "This lets you centralize product data and inventory management in the Source store while using the Destination stores purely as storefronts.",
+    "score": 12.80611801147461
+   }
+  ],
+  "label": "pitch",
+  "source": "forum",
+  "ms": 11273
+ }
+}
