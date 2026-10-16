@@ -1,0 +1,6 @@
+{
+  // Static site only: the page, its worker script and the example inbox. No server code.
+  "name": "doorman",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./dist" }
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Doorman</title>
+    <meta name="description" content="Sorts your contact-form inbox: customers first, sales pitches folded away. Gemma reads each message in your browser; nothing is uploaded." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b4c7e'/%3E%3Cpath d='M10 25V8h12v17M17 17h1' stroke='%23fff' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main class="column">
+      <header class="masthead">
+        <h1>Doorman</h1>
+        <p>
+          Your app's or shop's contact form, sorted: <strong>customers first</strong>, sales pitches folded away.
+          Gemma reads each message here, in your browser. Nothing you load leaves this page.
+        </p>
+      </header>
+
+      <section class="inset" aria-labelledby="load-title">
+        <h2 id="load-title" class="inset-title">Messages</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="files" multiple accept=".eml,.mbox,.txt,message/rfc822" />
+          <span><strong>Drop .eml files or a Gmail Takeout .mbox</strong>, or choose files</span>
+        </label>
+        <textarea id="paste" rows="6" placeholder="…or paste one message here (with or without its email headers)"></textarea>
+        <div class="row">
+          <button type="button" id="add-paste" class="tinted">Add Pasted Message</button>
+          <button type="button" id="example">Load Example Inbox</button>
+          <button type="button" id="clear" class="plain">Clear</button>
+        </div>
+        <p class="hint" id="count">No messages yet.</p>
+      </section>
+
+      <section class="inset" aria-labelledby="model-title">
+        <h2 id="model-title" class="inset-title">Model</h2>
+        <div class="row">
+          <select id="model" aria-label="Model">
+            <option value="gemma-3-1b">Gemma 3 1B · 763 MB, once</option>
+            <option value="gemma-3-270m">Gemma 3 270M · 273 MB, once (less accurate)</option>
+          </select>
+          <button type="button" id="sort" class="filled" disabled>Sort Inbox</button>
+        </div>
+        <p class="hint" id="status" role="status" aria-live="polite"></p>
+        <progress id="progress" hidden></progress>
+      </section>
+
+      <section id="results" hidden>
+        <h2 class="group-title">Customers <span id="n-customer"></span></h2>
+        <p class="hint">Answer these. Doorman quotes the sentence that shows what each one wants.</p>
+        <ol id="customer" class="cards"></ol>
+
+        <h2 class="group-title">Not sure <span id="n-unsure"></span></h2>
+        <p class="hint">Gemma couldn't back up its answer with a sentence from the message, so these stay in front of you.</p>
+        <ol id="unsure" class="cards"></ol>
+
+        <details id="pitch-group">
+          <summary class="group-title">Pitches <span id="n-pitch"></span></summary>
+          <p class="hint">Folded away, never deleted. Each one shows the sentence that gave it away.</p>
+          <ol id="pitch" class="cards"></ol>
+        </details>
+      </section>
+
+      <footer class="foot">
+        <p>
+          Gemma 3 runs in a Web Worker on your GPU (WebGPU) through Transformers.js; the weights download once from Hugging Face
+          and stay in your browser's cache. Doorman never deletes or answers anything.
+          <a href="https://github.com/mikey92/doorman">Code and evaluation</a>.
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

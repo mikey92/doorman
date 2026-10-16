@@ -1,0 +1,4 @@
+# Hugging Face answers 404 (and no CORS header) to requests whose Referer is a *.workers.dev
+# page, so the model would never load from this site. Nothing here needs a Referer.
+/*
+  Referrer-Policy: no-referrer

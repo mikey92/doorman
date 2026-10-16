@@ -1,0 +1,76 @@
+:root {
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --text: #1c1c1e;
+  --muted: #6c6c70;
+  --line: #d8d8dc;
+  --accent: #2b4c7e;
+  --accent-soft: #e4ebf5;
+  --mark: #fff1a8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --text: #f2f2f7;
+    --muted: #98989f;
+    --line: #38383a;
+    --accent: #8fb3ea;
+    --accent-soft: #1f2a3b;
+    --mark: #5b4d10;
+  }
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); line-height: 1.45; }
+.column { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+.masthead h1 { font-size: 34px; margin: 8px 0 4px; letter-spacing: -0.02em; }
+.masthead p { margin: 0 0 20px; color: var(--muted); font-size: 17px; }
+
+.inset { background: var(--surface); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+.inset-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 0 10px; }
+
+.drop {
+  display: block; border: 1.5px dashed var(--line); border-radius: 10px; padding: 18px; text-align: center;
+  color: var(--muted); cursor: pointer; margin-bottom: 10px;
+}
+.drop.over { border-color: var(--accent); background: var(--accent-soft); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.drop strong { color: var(--text); }
+
+textarea, select {
+  width: 100%; font: inherit; font-size: 15px; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+}
+select { width: auto; flex: 1; min-width: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+
+button {
+  font: inherit; font-size: 15px; border-radius: 8px; padding: 9px 14px; border: 0; cursor: pointer;
+  background: var(--accent-soft); color: var(--accent);
+}
+button.filled { background: var(--accent); color: var(--surface); font-weight: 600; }
+button.plain { background: transparent; }
+button:disabled { opacity: 0.45; cursor: default; }
+
+.hint { color: var(--muted); font-size: 14px; margin: 8px 0 0; }
+progress { width: 100%; margin-top: 8px; accent-color: var(--accent); }
+
+.group-title { font-size: 20px; margin: 28px 0 0; }
+.group-title span { color: var(--muted); font-weight: 400; margin-left: 4px; }
+details#pitch-group > summary { cursor: pointer; }
+.cards { list-style: none; padding: 0; margin: 10px 0 0; }
+.card { background: var(--surface); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+.card-head { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+.card-head span { color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+blockquote { margin: 8px 0 4px; padding-left: 10px; border-left: 3px solid var(--accent); font-size: 15px; }
+.card details summary { color: var(--accent); font-size: 14px; cursor: pointer; margin-top: 6px; }
+.body { white-space: pre-wrap; font-size: 14px; margin: 8px 0 0; overflow-wrap: anywhere; }
+mark { background: var(--mark); color: inherit; border-radius: 3px; }
+
+.foot { color: var(--muted); font-size: 13px; margin-top: 40px; }
+.foot a { color: var(--accent); }
